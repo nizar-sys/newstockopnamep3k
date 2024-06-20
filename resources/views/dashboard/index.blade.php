@@ -4,7 +4,6 @@
     $auth = Auth::user();
 @endphp
 
-@section('breadcrumb')
-<li class="breadcrumb-item active"><a
-href="{{ route('home') }}">Dashboard</a></li>
-@endsection
+@push('title-header')
+    Dashboard
+@endpush

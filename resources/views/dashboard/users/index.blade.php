@@ -1,74 +1,83 @@
 @extends('layouts.app')
 @section('title', 'Data Pengguna')
 
-@section('title-header', 'Data Pengguna')
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></li>
+@push('title-header', 'Data Pengguna')
+@push('breadcrumbs')
     <li class="breadcrumb-item active">Data Pengguna</li>
-@endsection
+@endpush
 
-@section('action_btn')
-    <a href="{{ route('users.create') }}" class="btn btn-default">Tambah Data</a>
-@endsection
+@push('action_btn')
+    <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm">Tambah Data</a>
+@endpush
 
 @section('content')
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow">
-                <div class="card-header bg-transparent border-0 text-dark">
-                    <h2 class="card-title h3">Data Pengguna</h2>
-                    <div class="table-responsive">
-                        <table class="table table-flush table-hover">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Role</th>
-                                    <th>Avatar</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($users as $user)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $user->name }}</td>
-                                        <td>{{ $user->email }}</td>
-                                        <td>
-                                            {{ ucfirst($user->role) }}
-                                        </td>
-                                        <td>
-                                            <img src="{{ asset('/uploads/images/' . $user->avatar) }}"
-                                                alt="{{ $user->name }}" width="100">
-                                        </td>
-                                        <td class="d-flex jutify-content-center">
-                                            @if ($user->id != 1)
-                                                <a href="{{ route('users.edit', $user->id) }}"
-                                                    class="btn btn-sm btn-warning"><i class="fas fa-pencil-alt"></i></a>
-                                                <form id="delete-form-{{ $user->id }}"
-                                                    action="{{ route('users.destroy', $user->id) }}" class="d-none"
-                                                    method="post">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                </form>
-                                                <button onclick="deleteForm('{{ $user->id }}')"
-                                                    class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="3">Tidak ada data</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card shadow">
+                        <div class="card-footer">
+                            <div class="card-tools">
+                                @stack('action_btn')
+                            </div>
+                        </div>
+                        <div class="card-body bg-transparent border-0 text-dark">
+                            <div class="table-responsive">
+                                <table class="table table-flush table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Role</th>
+                                            <th>Avatar</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($users as $user)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $user->name }}</td>
+                                                <td>{{ $user->email }}</td>
+                                                <td>
+                                                    {{ ucfirst($user->role) }}
+                                                </td>
+                                                <td>
+                                                    <img src="{{ asset('/uploads/images/' . $user->avatar) }}"
+                                                        alt="{{ $user->name }}" width="100">
+                                                </td>
+                                                <td class="d-flex jutify-content-center">
+                                                    @if ($user->id != 1)
+                                                        <a href="{{ route('users.edit', $user->id) }}"
+                                                            class="btn btn-sm btn-warning"><i
+                                                                class="fas fa-pencil-alt"></i></a>
+                                                        <form id="delete-form-{{ $user->id }}"
+                                                            action="{{ route('users.destroy', $user->id) }}" class="d-none"
+                                                            method="post">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                        </form>
+                                                        <button onclick="deleteForm('{{ $user->id }}')"
+                                                            class="btn btn-sm btn-danger ml-1"><i
+                                                                class="fas fa-trash"></i></button>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="6">Tidak ada data</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 @endsection
 
 @section('script')
