@@ -2,9 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\ChecklistRecordController;
 use App\Http\Controllers\DataTableController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfitController;
+use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\TreeviewController;
@@ -36,6 +38,8 @@ Route::middleware('auth')->group(function() {
     }); # profile group
 
     Route::resource('users', UserController::class);
-    Route::resource('treeview', TreeviewController::class)->only('index');
-    Route::resource('profit', ProfitController::class)->only('index');
+
+    Route::put('/rooms/{room}/update-items', [RoomController::class, 'updateItems'])->name('rooms.item.update');
+    Route::resource('rooms', RoomController::class);
+    Route::resource('checklist-records', ChecklistRecordController::class);
 });

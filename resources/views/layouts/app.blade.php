@@ -51,7 +51,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                         <!-- User image -->
-                        <li class="user-header bg-primary">
+                        <li class="user-header bg-dark">
                             <img src="{{ asset('/uploads/images/' . $authUser->avatar) }}"
                                 class="img-circle elevation-2" alt="User Image">
 
@@ -61,7 +61,7 @@
                         </li>
                         <!-- Menu Footer-->
                         <li class="user-footer">
-                            <a href="#" class="btn btn-default btn-flat">Profile</a>
+                            <a href="{{ route('profile', []) }}" class="btn btn-default btn-flat">Profile</a>
                             <form action="{{ route('logout') }}" method="post" class="d-none">
                                 @csrf
                             </form>
@@ -70,11 +70,6 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
-                        <i class="fas fa-th-large"></i>
-                    </a>
-                </li>
             </ul>
         </nav>
         <!-- /.navbar -->
@@ -82,7 +77,7 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="{{ url('/', []) }}" class="brand-link">
+            <a href="{{ route('home', []) }}" class="brand-link">
                 <img src="{{ asset('newassets') }}/dist/img/AdminLTELogo.png" alt="AdminLTE Logo"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">{{ config('app.name') }}</span>
@@ -152,7 +147,7 @@
     <!-- AdminLTE App -->
     <script src="{{ asset('newassets') }}/dist/js/adminlte.min.js"></script>
     <!-- AdminLTE for demo purposes -->
-    <script src="{{ asset('newassets') }}/dist/js/demo.js"></script>
+    {{-- <script src="{{ asset('newassets') }}/dist/js/demo.js"></script> --}}
 
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
