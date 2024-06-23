@@ -22,6 +22,7 @@ return new class extends Migration
             $table->longText('note')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->foreign('updated_by')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('status_verif')->nullable()->default('unverified');
             $table->timestamps();
         });
     }

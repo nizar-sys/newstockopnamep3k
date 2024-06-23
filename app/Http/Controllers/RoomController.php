@@ -135,4 +135,18 @@ class RoomController extends Controller
 
         return redirect(route('rooms.show', $room->id))->with('success', 'Daftar isi kotak p3k berhasil diperbarui.');
     }
+
+    public function getRooms(Request $request)
+    {
+        $search = $request->input('q');
+
+        $products = Room::query()
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', '%' . $search . '%');
+            })
+            ->latest()
+            ->get(['id', 'name']);
+
+        return response()->json($products);
+    }
 }

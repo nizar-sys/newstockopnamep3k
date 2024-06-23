@@ -15,4 +15,9 @@ class Item extends Model
     {
         return $this->belongsTo(Room::class);
     }
+
+    public function checklistRecords()
+    {
+        return $this->hasMany(ChecklistRecord::class);
+    }
 }

@@ -8,8 +8,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name') }} | @yield('title')</title>
-    <script src="{{ asset('/assets/vendor/jquery/dist/jquery.min.js') }}"></script>
 
+    <script src="{{ asset('/assets/vendor/jquery/dist/jquery.min.js') }}"></script>
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="{{ asset('/assets/css//snackbar.min.css') }}">
     <script src="{{ asset('/assets/js/snackbar.min.js') }}"></script>
 
+    @stack('style')
 </head>
 
 <body class="hold-transition sidebar-mini">

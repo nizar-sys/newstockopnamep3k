@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApprovalRecordsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ChecklistRecordController;
@@ -41,5 +42,16 @@ Route::middleware('auth')->group(function() {
 
     Route::put('/rooms/{room}/update-items', [RoomController::class, 'updateItems'])->name('rooms.item.update');
     Route::resource('rooms', RoomController::class);
+
+    Route::prefix('/checklist-records')->group(function(){
+        Route::post('/items', [ChecklistRecordController::class, 'storeItem'])->name('checklist-records.item.store');
+        Route::put('/items/{item}', [ChecklistRecordController::class, 'updateItem'])->name('checklist-records.item.update');
+        Route::delete('/items/{item}/destroy', [ChecklistRecordController::class, 'destroyItem'])->name('checklist-records.item.destroy');
+    });
     Route::resource('checklist-records', ChecklistRecordController::class);
+
+    Route::prefix('/approval-records')->group(function(){
+        Route::post('/approve', [ApprovalRecordsController::class, 'approveChecklist'])->name('approval-records.checklist.store');
+    });
+    Route::resource('approval-records', ApprovalRecordsController::class);
 });
