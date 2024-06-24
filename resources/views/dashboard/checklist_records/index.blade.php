@@ -32,11 +32,6 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-                    @if ($checklistRecordsUnsaved->count() == 0)
-                        <div class="alert bg-warning custom-alert-warning" role="alert">
-                            Pada tanggal <b>@date_formatted($dateSelected)</b> ini tidak ada pengecekan yang belum terjadi.
-                        </div>
-                    @endif
                     @php
                         $lastChecklistRecord = $checklistRecords
                             ->filter(function ($record) {
@@ -45,6 +40,11 @@
                             ->sortByDesc('updated_at')
                             ->first();
                     @endphp
+                    @if ($checklistRecordsUnsaved->count() == 0 && !$lastChecklistRecord)
+                        <div class="alert bg-warning custom-alert-warning" role="alert">
+                            Pada tanggal <b>@date_formatted($dateSelected)</b> ini tidak ada pengecekan yang belum terjadi.
+                        </div>
+                    @endif
                     @if ($lastChecklistRecord)
                         <div class="alert bg-success custom-alert-success" role="alert">
                             Data terakhir diubah oleh <b>{{ $lastChecklistRecord->updatedBy->name }}</b> pada tanggal
