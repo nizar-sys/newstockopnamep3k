@@ -235,6 +235,12 @@
 
             $('#check-all').click(function() {
                 $('.check-data').prop('checked', $(this).is(':checked'));
+
+                if ($('.check-data').length == $('.check-data:checked').length) {
+                    $('#verif-all-data').removeClass('d-none');
+                } else {
+                    $('#verif-all-data').addClass('d-none');
+                }
             });
         });
     </script>

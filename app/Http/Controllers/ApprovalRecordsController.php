@@ -16,18 +16,27 @@ class ApprovalRecordsController extends Controller
 
     public function approveChecklist(Request $request)
     {
-        if(is_array($request->checklist_record_id)){
-            ChecklistRecord::whereIn('id', $request->checklist_record_id)->update([
-                'status_verif' => 'verified',
-                'updated_at' => now(),
-            ]);
-        } else {
-            $checklistRecord = ChecklistRecord::findOrFail($request->checklist_record_id);
-            $checklistRecord->update([
-                'status_verif' => 'verified',
-                'updated_at' => now(),
-            ]);
-        }
+        $checklistRecordIds = (array) $request->checklist_record_id;
+
+        $checklistRecords = ChecklistRecord::whereIn('id', $checklistRecordIds)->get();
+        $oldChecklistRecords = $checklistRecords->toArray();
+
+        ChecklistRecord::whereIn('id', $checklistRecordIds)->update([
+            'status_verif' => 'verified',
+            'updated_at' => now(),
+        ]);
+
+        // Reload the updated records
+        $newChecklistRecords = ChecklistRecord::whereIn('id', $checklistRecordIds)->get()->toArray();
+
+        activity('approval_records')
+            ->withProperties([
+                'old' => $oldChecklistRecords,
+                'new' => $newChecklistRecords,
+                'changes' => $newChecklistRecords,
+            ])
+            ->causedBy(auth()->user())
+            ->log('Menyetujui pengecekan item P3K');
 
         return redirect()->route('approval-records.index');
     }

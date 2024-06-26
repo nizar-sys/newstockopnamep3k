@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\ApprovalRecordsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -54,4 +55,5 @@ Route::middleware('auth')->group(function() {
         Route::post('/approve', [ApprovalRecordsController::class, 'approveChecklist'])->name('approval-records.checklist.store');
     });
     Route::resource('approval-records', ApprovalRecordsController::class);
+    Route::resource('activity-logs', ActivityLogController::class);
 });

@@ -42,7 +42,7 @@ class UserController extends Controller
             'created_at' => now(),
         ];
 
-        if($request->hasFile('avatar')){
+        if ($request->hasFile('avatar')) {
             $fileName = time() . '.' . $request->avatar->extension();
             $validated['avatar'] = $fileName;
 
@@ -52,7 +52,17 @@ class UserController extends Controller
 
         $validated['password'] = Hash::make($validated['password']);
 
-        User::create($validated);
+        $user = User::create($validated);
+
+        activity('users')
+            ->causedBy(auth()->user())
+            ->performedOn($user)
+            ->withProperties([
+                'old' => null,
+                'new' => $user,
+                'changes' => $user->getChanges(),
+            ])
+            ->log('Menambahkan data pengguna baru');
 
         return redirect(route('users.index'))->with('success', 'Data pengguna berhasil ditambahkan.');
     }
@@ -95,10 +105,11 @@ class UserController extends Controller
         ];
 
         $user = User::findOrFail($id);
+        $oldUser = clone $user;
 
         $validated['avatar'] = $user->avatar;
 
-        if($request->hasFile('avatar')){
+        if ($request->hasFile('avatar')) {
             $fileName = time() . '.' . $request->avatar->extension();
             $validated['avatar'] = $fileName;
 
@@ -106,13 +117,23 @@ class UserController extends Controller
             $request->avatar->move(public_path('uploads/images'), $fileName);
 
             // delete old file
-            $oldPath = public_path('/uploads/images/'.$user->avatar);
-            if(file_exists($oldPath) && $user->avatar != 'avatar.png'){
+            $oldPath = public_path('/uploads/images/' . $user->avatar);
+            if (file_exists($oldPath) && $user->avatar != 'avatar.png') {
                 unlink($oldPath);
             }
         }
 
         $user->update($validated);
+
+        activity('users')
+            ->causedBy(auth()->user())
+            ->performedOn($user)
+            ->withProperties([
+                'old' => $oldUser,
+                'new' => User::findOrFail($id),
+                'changes' => $user->getChanges(),
+            ])
+            ->log('Mengubah data pengguna');
 
         return redirect(route('users.index'))->with('success', 'Data pengguna berhasil diperbarui.');
     }
@@ -126,12 +147,24 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
+        $oldUser = clone $user;
+
         // delete old file
-        $oldPath = public_path('/uploads/images/'.$user->avatar);
-        if(file_exists($oldPath) && $user->avatar != 'avatar.png'){
+        $oldPath = public_path('/uploads/images/' . $user->avatar);
+        if (file_exists($oldPath) && $user->avatar != 'avatar.png') {
             unlink($oldPath);
         }
         $user->delete();
+
+        activity('users')
+            ->causedBy(auth()->user())
+            ->performedOn($user)
+            ->withProperties([
+                'old' => $oldUser,
+                'new' => null,
+                'changes' => null,
+            ])
+            ->log('Menghapus data pengguna');
 
         return redirect(route('users.index'))->with('success', 'Data pengguna berhasil dihapus.');
     }

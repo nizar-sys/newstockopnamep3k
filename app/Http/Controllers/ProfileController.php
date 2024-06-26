@@ -45,13 +45,23 @@ class ProfileController extends Controller
                 return $this->success(null, 'success');
             }
 
+            activity('profile')
+                ->performedOn($user)
+                ->causedBy(Auth::id())
+                ->withProperties([
+                    'old' => $old_foto,
+                    'new' => public_path('/uploads/images/' . $imageName),
+                    'changes' => $user->getChanges(),
+                ])
+                ->log('Mengubah foto profile');
+
             return redirect(route('profile'))->with('success', 'Berhasil ubah avatar profile');
         } catch (\Throwable $th) {
             if ($request->ajax()) {
                 return $this->error('Error ' . $th->getMessage());
             }
             return back()->with('error', 'Error ' . $th->getMessage());
-        }   
+        }
     }
 
     public function changeProfile(RequestStoreUpdateProfile $request)
@@ -62,18 +72,29 @@ class ProfileController extends Controller
             ];
 
             $user = User::findOrFail(Auth::id());
+            $oldUser = clone $user;
 
             if(!is_null($request->password)){
                 $validated['password'] = Hash::make($request->password);
             } else {
                 unset($validated['password']);
             }
-            
+
             $user->update($validated);
 
             if ($request->ajax()) {
                 return $this->success(null, 'Profile berhasil diubah');
             }
+
+            activity('profile')
+                ->performedOn($user)
+                ->causedBy(Auth::id())
+                ->withProperties([
+                    'old' => $oldUser,
+                    'new' => $user,
+                    'changes' => $user->getChanges(),
+                ])
+                ->log('Mengubah profile');
 
             return back()->with('success', 'Profile berhasil diubah');
         } catch (\Throwable $th) {

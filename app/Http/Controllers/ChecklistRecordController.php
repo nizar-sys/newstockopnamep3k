@@ -61,7 +61,8 @@ class ChecklistRecordController extends Controller
 
     public function store(Request $request)
     {
-        $roomItems = Room::with('items')->findOrFail($request->room_id)->items;
+        $room = Room::findOrFail($request->room_id);
+        $roomItems = $room->items;
 
         // cek apakah sudah ada data checklist hari ini
         $checklistRecords = ChecklistRecord::whereIn('item_id', collect($request->data)->pluck('item_id'))
@@ -70,8 +71,11 @@ class ChecklistRecordController extends Controller
 
         // update data jika sudah ada
         if ($checklistRecords->count() > 0) {
+            $oldChecklist = collect();
             foreach ($checklistRecords as $checklistRecord) {
                 $data = collect($request->data)->firstWhere('item_id', $checklistRecord->item_id);
+                $oldChecklist->push($checklistRecord->toArray());
+
                 $checklistRecord->update([
                     'real_qty' => $data['real_qty'],
                     'minus_qty' => ($checklistRecord->item->standard_qty != 0 && $data['real_qty'] < $checklistRecord->item->standard_qty) ? $checklistRecord->item->standard_qty - $data['real_qty'] : 0,
@@ -113,19 +117,34 @@ class ChecklistRecordController extends Controller
                 }
             }
 
-            ChecklistRecord::insert($payloadChecklistRecords);
+            $checklistRecords = ChecklistRecord::insert($payloadChecklistRecords);
         }
+
+        activity('checklist_records')
+            ->causedBy(auth()->user())
+            ->performedOn($room)
+            ->withProperties([
+                'old' => $oldChecklist->toArray(),
+                'new' => $checklistRecords->toArray(),
+                'changes' => $checklistRecords->toArray(),
+            ])
+            ->log('Melakukan pengecekan item P3K di ruangan ' . $room->name);
 
         return response()->json(['message' => 'Data berhasil disimpan']);
     }
 
     public function storeItem(Request $request)
     {
+        $room = Room::findOrFail($request->room_id);
+        $oldItems = $room->items->toArray();
+
         $item = Item::create([
             'room_id' => $request->room_id,
             'name' => $request->name,
             'standard_qty' => $request->standard_qty,
         ]);
+
+        $room->load('items');
 
         $dateSelected = $request->filled('date') ? date('Y-m-d', strtotime($request->date)) : date('Y-m-d', strtotime(now()));
 
@@ -146,22 +165,64 @@ class ChecklistRecordController extends Controller
             ]);
         }
 
+        activity('checklist_records')
+            ->causedBy(auth()->user())
+            ->performedOn($item)
+            ->withProperties([
+                'old' => $oldItems,
+                'new' => $room->items->toArray(),
+                'changes' => $room->items->toArray(),
+            ])
+            ->log('Menambahkan item ' . $item->name . ' P3K ke ruangan ' . $room->name);
+
         return back()->with('success', 'Item P3K berhasil ditambahkan');
     }
 
     public function updateItem(Request $request, Item $item)
     {
+        $room = Room::findOrFail($item->room_id);
+        $oldItems = $room->items->toArray();
+        $oldItem = clone $item;
+
         $item->update([
             'name' => $request->name,
             'standard_qty' => $request->standard_qty,
         ]);
+
+        $room->load('items');
+
+        activity('checklist_records')
+            ->causedBy(auth()->user())
+            ->performedOn($item)
+            ->withProperties([
+                'old' => $oldItems,
+                'new' => $room->items->toArray(),
+                'changes' => $item->getChanges(),
+            ])
+            ->log('Mengubah item ' . $oldItem->name . ' P3K di ruangan ' . $room->name);
 
         return back()->with('success', 'Item P3K berhasil diubah');
     }
 
     public function destroyItem(Item $item)
     {
+        $room = Room::findOrFail($item->room_id);
+        $oldItems = $room->items->toArray();
+        $oldItem = clone $item;
+
         $item->delete();
+
+        $room->load('items');
+
+        activity('checklist_records')
+            ->causedBy(auth()->user())
+            ->performedOn($item)
+            ->withProperties([
+                'old' => $oldItems,
+                'new' => $room->items->toArray(),
+                'changes' => null,
+            ])
+            ->log('Menghapus item ' . $oldItem->name . ' P3K di ruangan ' . $room->name);
 
         return response()->json(['message' => 'Item P3K berhasil dihapus']);
     }

@@ -46,7 +46,17 @@ class RoomController extends Controller
             'created_at' => now(),
         ];
 
-        Room::create($validated);
+        $room = Room::create($validated);
+
+        activity('rooms')
+            ->causedBy(auth()->user())
+            ->performedOn($room)
+            ->withProperties([
+                'old' => null,
+                'new' => $room,
+                'changes' => [],
+            ])
+            ->log('Menambahkan data ruangan');
 
         return redirect(route('rooms.index'))->with('success', 'Data ruangan berhasil ditambahkan.');
     }
@@ -91,8 +101,19 @@ class RoomController extends Controller
         ];
 
         $room = Room::findOrFail($id);
+        $oldRoom = clone $room;
 
         $room->update($validated);
+
+        activity('rooms')
+            ->causedBy(auth()->user())
+            ->performedOn($room)
+            ->withProperties([
+                'old' => $oldRoom,
+                'new' => $room,
+                'changes' => $room->getChanges(),
+            ])
+            ->log('Mengubah data ruangan');
 
         return redirect(route('rooms.index'))->with('success', 'Data ruangan berhasil diperbarui.');
     }
@@ -106,8 +127,19 @@ class RoomController extends Controller
     public function destroy($id)
     {
         $room = Room::findOrFail($id);
+        $oldRoom = clone $room;
 
         $room->delete();
+
+        activity('rooms')
+            ->causedBy(auth()->user())
+            ->performedOn($room)
+            ->withProperties([
+                'old' => $oldRoom,
+                'new' => null,
+                'changes' => null,
+            ])
+            ->log('Menghapus data ruangan');
 
         return redirect(route('rooms.index'))->with('success', 'Data ruangan berhasil dihapus.');
     }
@@ -129,9 +161,22 @@ class RoomController extends Controller
         if ($this->checkIfHaveNotChanges($request, $room)) return redirect(route('rooms.show', $room->id))->with('error', 'Daftar isi kotak p3k tidak berubah.');
 
         if ($payloadItems) {
+            $oldItems = $room->items->toArray();
             $room->items()->delete();
             $room->items()->createMany($payloadItems);
+
+            $room->load('items');
         }
+
+        activity('rooms')
+            ->causedBy(auth()->user())
+            ->performedOn($room)
+            ->withProperties([
+                'old' => $oldItems,
+                'new' => $room->items->toArray(),
+                'changes' => $room->items->toArray(),
+            ])
+            ->log('Mengubah daftar isi kotak p3k di ruangan ' . $room->name);
 
         return redirect(route('rooms.show', $room->id))->with('success', 'Daftar isi kotak p3k berhasil diperbarui.');
     }
