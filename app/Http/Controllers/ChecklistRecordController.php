@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ChecklistRecord;
 use App\Models\Item;
 use App\Models\Room;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -53,7 +54,7 @@ class ChecklistRecordController extends Controller
 
             $checklistRecordsUnsaved = ChecklistRecord::notVerified()
                 ->whereDate('created_at', $dateSelected)
-            ->get();
+                ->get();
         }
 
         return view('dashboard.checklist_records.index', compact('hasDataset', 'room', 'roomItems', 'dateSelected', 'checklistRecords', 'checklistRecordsUnsaved'));
@@ -225,5 +226,40 @@ class ChecklistRecordController extends Controller
             ->log('Menghapus item ' . $oldItem->name . ' P3K di ruangan ' . $room->name);
 
         return response()->json(['message' => 'Item P3K berhasil dihapus']);
+    }
+
+    public function exportRecords(Request $request)
+    {
+        $type = $request->type;
+        $roomId = $request->room_id;
+        $checklistRecords = collect();
+
+        if ($type == 'single') {
+            foreach (explode(', ', $request->dates) as $date) {
+                $checklistRecords = $checklistRecords->merge(ChecklistRecord::whereHas('item', function ($query) use ($roomId) {
+                    $query->where('room_id', $roomId);
+                })->whereDate('created_at', $date)->get());
+            }
+        } else {
+            $startDate = Carbon::parse(explode(' - ', $request->dates)[0])->format('Y-m-d');
+            $endDate = Carbon::parse(explode(' - ', $request->dates)[1])->format('Y-m-d');
+
+            $checklistRecords = ChecklistRecord::whereHas('item', function ($query) use ($roomId) {
+                $query->where('room_id', $roomId);
+            })->whereBetween('created_at', [$startDate, $endDate])->get();
+        }
+
+        if ($checklistRecords->isEmpty()) {
+            return back()->with('error', 'Data tidak ditemukan');
+        }
+
+        if ($checklistRecords->contains('status_verif', 'unverified')) {
+            return back()->with('error', 'Data yang belum diverifikasi tidak bisa diexport');
+        }
+
+        $pdf = Pdf::loadView('dashboard.checklist_records.export_pdf', compact('checklistRecords'));
+        $pdf->setPaper('a4', 'landscape');
+
+        return $pdf->download('laporan-pengecekan-p3k.pdf');
     }
 }

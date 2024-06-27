@@ -27,7 +27,7 @@
                         </div>
                         <div class="card-body bg-transparent border-0 text-dark">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped">
+                                <table class="table table-bordered table-striped" id="table">
                                     <thead>
                                         <tr>
                                             <th>
@@ -240,6 +240,37 @@
                     $('#verif-all-data').removeClass('d-none');
                 } else {
                     $('#verif-all-data').addClass('d-none');
+                }
+            });
+
+            $('#table').DataTable({
+                autoWidth: false,
+                dom: '<"row"<"col-md-6"B><"col-md-6"f>>' +
+                    '<"row"<"col-md-6"l><"col-md-6"p>>' +
+                    'rt' +
+                    '<"row"<"col-md-5"i><"col-md-7"p>>',
+                buttons: [{
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5],
+                        },
+                        className: 'btn btn-danger btn-sm',
+                        text: '<i class="fas fa-file-pdf"></i>'
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5],
+                        },
+                        className: 'btn btn-success btn-sm ml-1',
+                        text: '<i class="fas fa-file-excel"></i>'
+                    },
+                ],
+                language: {
+                    paginate: {
+                        previous: '<i class="fas fa-chevron-left"></i>',
+                        next: '<i class="fas fa-chevron-right"></i>'
+                    }
                 }
             });
         });

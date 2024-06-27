@@ -23,7 +23,7 @@
                         </div>
                         <div class="card-body bg-transparent border-0 text-dark">
                             <div class="table-responsive">
-                                <table class="table table-flush table-hover">
+                                <table class="table table-flush table-hover" id="table">
                                     <thead>
                                         <tr>
                                             <th>No</th>
@@ -47,7 +47,8 @@
                                                         </svg>
                                                     </a>
                                                     <a href="{{ route('rooms.edit', $room->id) }}"
-                                                        class="btn btn-sm btn-warning ml-1"><i class="fas fa-pencil-alt"></i></a>
+                                                        class="btn btn-sm btn-warning ml-1"><i
+                                                            class="fas fa-pencil-alt"></i></a>
                                                     <form id="delete-form-{{ $room->id }}"
                                                         action="{{ route('rooms.destroy', $room->id) }}" class="d-none"
                                                         method="post">
@@ -92,5 +93,38 @@
                 }
             })
         }
+
+        $(document).ready(function() {
+            $('#table').DataTable({
+                autoWidth: false,
+                dom: '<"row"<"col-md-6"B><"col-md-6"f>>' +
+                    '<"row"<"col-md-6"l><"col-md-6"p>>' +
+                    'rt' +
+                    '<"row"<"col-md-5"i><"col-md-7"p>>',
+                buttons: [{
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: [0, 1]
+                        },
+                        className: 'btn btn-danger btn-sm',
+                        text: '<i class="fas fa-file-pdf"></i>'
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: [0, 1]
+                        },
+                        className: 'btn btn-success btn-sm ml-1',
+                        text: '<i class="fas fa-file-excel"></i>'
+                    },
+                ],
+                language: {
+                    paginate: {
+                        previous: '<i class="fas fa-chevron-left"></i>',
+                        next: '<i class="fas fa-chevron-right"></i>'
+                    }
+                }
+            });
+        });
     </script>
 @endsection

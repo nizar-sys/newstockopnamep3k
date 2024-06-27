@@ -8,6 +8,7 @@
 
 @push('style')
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" rel="stylesheet">
     <style>
         .select2-container--default .select2-selection--single {
             height: 40px;
@@ -31,6 +32,43 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
+                <div class="col-12">
+                    <div class="modal fade" id="dateModal" tabindex="-1" aria-labelledby="dateModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="dateModalLabel">Pilih Periode</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="export-form" action="">
+                                        @csrf
+                                        <div id="datepicker-container">
+                                            <div class="form-group mb-3">
+                                                <label for="periode">Periode</label>
+                                                <input type="text" class="form-control" id="periode" name="periode"
+                                                    placeholder="Select dates or range">
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <button type="button" class="btn btn-primary" id="toggleMode">
+                                                    Rentang
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-danger" id="export-btn">Export</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-12">
                     @php
                         $lastChecklistRecord = $checklistRecords
@@ -118,7 +156,10 @@
                                     <a href="#"
                                         class="btn btn-sm btn-primary float-right save-dataset ml-2 d-none">Simpan Data</a>
                                     <a href="#" class="btn btn-sm btn-warning float-right edit-dataset ml-2">Edit</a>
-                                    <a href="#" class="btn btn-sm btn-success float-right add-item">Tambah Item</a>
+                                    <a href="#" class="btn btn-sm btn-success float-right add-item ml-2">Tambah
+                                        Item</a>
+                                    <a href="#" class="btn btn-sm btn-danger float-right" data-toggle="modal"
+                                        data-target="#dateModal">Export Data</a>
                                 </div>
                             </div>
                             <form action="{{ route('checklist-records.store') }}" method="post" id="store-dataset">
@@ -128,19 +169,17 @@
 
                                 <div class="card-body bg-transparent border-0 text-dark">
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-striped">
+                                        <table class="table table-bordered table-striped" id="table">
                                             <thead>
                                                 <tr>
-                                                    <th>
-                                                        #
-                                                    </th>
+                                                    <th>#</th>
                                                     <th>No</th>
                                                     <th>Item P3K</th>
                                                     <th>Jumlah Standar</th>
                                                     <th>Jumlah Realtime</th>
                                                     <th>Minus</th>
                                                     <th>Status Item</th>
-                                                    <th>Nama petugas</th>
+                                                    <th>Nama Petugas</th>
                                                     <th>Catatan</th>
                                                     <th>Status Verifikasi</th>
                                                     <th>Aksi</th>
@@ -149,38 +188,33 @@
                                             <tbody>
                                                 @forelse ($checklistRecords as $checklist)
                                                     <tr>
-                                                        <td>
-                                                            <input type="checkbox" name="item_id[]"
+                                                        <td><input type="checkbox" name="item_id[]"
                                                                 value="{{ $checklist->item_id }}" class="check-data">
                                                         </td>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $checklist->item_name }}</td>
                                                         <td>{{ $checklist->item_standard_qty }}</td>
-                                                        <td>
-                                                            <input type="number" data-item_id="{{ $checklist->item_id }}"
+                                                        <td><input type="number"
+                                                                data-item_id="{{ $checklist->item_id }}"
                                                                 data-updated_by="{{ auth()->id() }}" name="real_qty[]"
                                                                 class="form-control" disabled
-                                                                value="{{ $checklist->real_qty }}">
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" name="minus_qty[]" class="form-control"
-                                                                disabled value="{{ $checklist->minus_qty }}">
-                                                        </td>
+                                                                value="{{ $checklist->real_qty }}"></td>
+                                                        <td><input type="number" name="minus_qty[]" class="form-control"
+                                                                disabled value="{{ $checklist->minus_qty }}"></td>
                                                         <td width="150">
                                                             <select name="status[]" class="form-control" disabled>
                                                                 @foreach (['layak', 'kadaluarsa'] as $status)
                                                                     <option value="{{ $status }}"
                                                                         {{ $status == $checklist->status ? 'selected' : '' }}>
-                                                                        {{ ucfirst($status) }}</option>
+                                                                        {{ ucfirst($status) }}
+                                                                    </option>
                                                                 @endforeach
                                                             </select>
                                                         </td>
+                                                        <td><input type="text" name="name[]" class="form-control"
+                                                                disabled value="{{ $checklist->updatedByName }}"></td>
                                                         <td>
-                                                            <input type="text" name="name[]" class="form-control"
-                                                                disabled value="{{ $checklist->updatedByName }}">
-                                                        </td>
-                                                        <td>
-                                                            <textarea name="note[]" cols="15" rows="1" disabled>{{ $checklist->note }}</textarea>
+                                                            <textarea name="note[]" cols="15" rows="1" disabled value="{{ $checklist->note }}">{{ $checklist->note }}</textarea>
                                                         </td>
                                                         <td width="120">
                                                             {{ $checklist->status_verif == 'verified' ? 'Terverifikasi' : 'Belum Terverifikasi' }}
@@ -202,13 +236,14 @@
                                                                     class="fas fa-trash"></i></button>
                                                         </td>
                                                     </tr>
-
                                                 @empty
                                                     <tr>
-                                                        <td colspan="10" class="text-center">Data tidak ditemukan</td>
+                                                        <td colspan="11" class="text-center">Data tidak ditemukan</td>
                                                     </tr>
                                                 @endforelse
+                                            </tbody>
                                         </table>
+
                                     </div>
                                 </div>
                             </form>
@@ -230,9 +265,12 @@
 @endsection
 
 @section('script')
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script>
         var urlRoot = '{{ url('/') }}';
         var roomDetail = @json($room);
+        var hasDataset = @json($hasDataset);
     </script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
@@ -514,6 +552,166 @@
 
                 saveDataset();
             });
+
+            if (hasDataset) {
+                $(document).ready(function() {
+                    $('#table').DataTable({
+                        autoWidth: false,
+                        dom: '<"row"<"col-md-6"B><"col-md-6"f>>' +
+                            '<"row"<"col-md-6"l><"col-md-6"p>>' +
+                            'rt' +
+                            '<"row"<"col-md-5"i><"col-md-7"p>>',
+                        buttons: [{
+                                extend: 'pdf',
+                                exportOptions: {
+                                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                                    format: {
+                                        body: function(data, row, column, node) {
+                                            // Check if the column should extract value from inputs/selects and textareas
+                                            if ([3, 4, 5, 6, 7, 8].indexOf(column) > -1) {
+                                                if (column == 7) {
+                                                    // textarea html value
+                                                    return $(node).find('textarea')
+                                                        .text() || '';
+
+                                                }
+                                                if (column == 6) {
+                                                    // textarea html value
+                                                    return $(node).find('input')
+                                                        .text() || '';
+
+                                                }
+                                                return $(node).find(
+                                                        'input, select, textarea').val() ||
+                                                    data;
+                                            }
+                                            return data;
+                                        }
+                                    }
+                                },
+                                className: 'btn btn-danger btn-sm',
+                                text: '<i class="fas fa-file-pdf"></i>'
+                            },
+                            {
+                                extend: 'excel',
+                                exportOptions: {
+                                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                                    format: {
+                                        body: function(data, row, column, node) {
+                                            // Check if the column should extract value from inputs/selects and textareas
+                                            if ([3, 4, 5, 6, 7, 8].indexOf(column) > -1) {
+                                                if (column == 7) {
+                                                    // textarea html value
+                                                    return $(node).find('textarea')
+                                                        .text() || '';
+
+                                                }
+                                                if (column == 6) {
+                                                    // textarea html value
+                                                    return $(node).find('input')
+                                                        .text() || '';
+
+                                                }
+                                                return $(node).find(
+                                                        'input, select, textarea').val() ||
+                                                    data;
+                                            }
+                                            return data;
+                                        }
+                                    }
+                                },
+                                className: 'btn btn-success btn-sm ml-1',
+                                text: '<i class="fas fa-file-excel"></i>'
+                            },
+                        ],
+                        language: {
+                            paginate: {
+                                previous: '<i class="fas fa-chevron-left"></i>',
+                                next: '<i class="fas fa-chevron-right"></i>'
+                            }
+                        }
+                    });
+                });
+
+                $(document).ready(function() {
+                    var selectedDates = [];
+                    var isSingleDatePicker = true;
+
+                    function updateInput() {
+                        $('#periode').val(selectedDates.join(', '));
+                    }
+
+                    function initializeDatepicker() {
+                        $('#periode').daterangepicker({
+                            singleDatePicker: isSingleDatePicker,
+                            showDropdowns: true,
+                            autoUpdateInput: false,
+                            locale: {
+                                format: 'YYYY-MM-DD',
+                                cancelLabel: 'Clear',
+                            }
+                        }, function(start, end, label) {
+                            if (isSingleDatePicker) {
+                                var date = start.format('YYYY-MM-DD');
+                                if (selectedDates.includes(date)) {
+                                    selectedDates = selectedDates.filter(d => d !== date);
+                                } else {
+                                    selectedDates.push(date);
+                                }
+                                updateInput();
+                            } else {
+                                $('#periode').val(start.format('YYYY-MM-DD') + ' - ' + end.format(
+                                    'YYYY-MM-DD'));
+                            }
+                        });
+
+                        $('#periode').on('cancel.daterangepicker', function(ev, picker) {
+                            selectedDates = [];
+                            updateInput();
+                        });
+                    }
+
+                    initializeDatepicker();
+
+                    $('#toggleMode').click(function() {
+                        isSingleDatePicker = !isSingleDatePicker;
+                        selectedDates = [];
+                        $('#periode').val('');
+                        $('#periode').data('daterangepicker').remove();
+                        $(this).text(isSingleDatePicker ? 'Rentang' : 'Pilih Tanggal');
+                        initializeDatepicker();
+                    });
+
+                    $('#dateModal').on('hidden.bs.modal', function() {
+                        selectedDates = [];
+                        updateInput();
+                    });
+
+                    $('#dateModal').on('click', '#export-btn', function() {
+                        var dates = $('#periode').val();
+                        var type = isSingleDatePicker ? 'single' : 'range';
+
+                        if (dates == '') {
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'Pilih periode terlebih dahulu!',
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            });
+                            return;
+                        }
+
+                        var url = "/checklist-records/export?type=" + type + "&dates=" + dates +
+                            "&room_id=" +
+                            roomDetail.id;
+
+                        window.open(url, '_blank');
+                    });
+                });
+            }
         });
     </script>
 @endsection
