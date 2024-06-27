@@ -25,7 +25,8 @@ use App\Http\Controllers\TreeviewController;
 */
 
 # ------ Unauthenticated routes ------ #
-Route::get('/', [AuthenticatedSessionController::class, 'create']);
+Route::get('/', [RouteController::class, 'home']);
+Route::get('/scan-checklist-records', [RouteController::class, 'checklistRecords'])->name('landing.checklist');
 require __DIR__.'/auth.php';
 
 

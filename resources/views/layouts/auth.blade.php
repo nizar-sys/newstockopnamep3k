@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{ asset('newassets') }}/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('newassets') }}/dist/css/adminlte.min.css">
+    @stack('style')
 </head>
 
 <body class="hold-transition login-page">
@@ -27,6 +28,7 @@
     <script src="{{ asset('newassets') }}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('newassets') }}/dist/js/adminlte.min.js"></script>
+    @yield('script')
 </body>
 
 </html>

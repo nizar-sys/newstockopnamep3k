@@ -249,7 +249,7 @@
                             </form>
                             <div class="card-footer">
                                 <div class="card-tools">
-                                    <a href="#" class="btn btn-sm btn-success float-left add-item" add-item>Tambah
+                                    <a href="#" class="btn btn-sm btn-success float-left add-item">Tambah
                                         Item</a>
                                     <a href="#" class="btn btn-sm btn-warning float-left edit-dataset ml-2">Edit</a>
                                     <a href="#"
