@@ -50,6 +50,9 @@
                                             <select class="form-control @error('role') is-invalid @enderror" id="role" name="role">
                                                 @php
                                                     $roles = ['admin', 'atasan', 'petugas'];
+                                                    if (auth()->user()->role != 'admin'){
+                                                        $roles = ['petugas'];
+                                                    }
                                                 @endphp
                                                 <option value="" selected>---Role---</option>
                                                 @foreach ($roles as $role)

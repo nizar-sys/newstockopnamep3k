@@ -49,7 +49,7 @@
                                                         value="{{ $record->id }}" class="check-data">
                                                 </td>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>@date_formatted($record->updated_at)</td>
+                                                <td>@date_formatted($record->created_at)</td>
                                                 <td>
                                                     {{ $record->item->room->name }}
                                                 </td>
@@ -62,7 +62,7 @@
                                                 <td class="d-flex jutify-content-center">
                                                     <button onclick="approveForm('{{ $record->id }}')"
                                                         class="btn btn-sm btn-success ml-1"><i
-                                                            class="fas fa-check"></i></button>
+                                                            class="fas fa-check"></i> Verifikasi</button>
                                                 </td>
                                             </tr>
                                         @empty
@@ -255,7 +255,7 @@
                             columns: [1, 2, 3, 4, 5],
                         },
                         className: 'btn btn-danger btn-sm',
-                        text: '<i class="fas fa-file-pdf"></i>'
+                        text: '<i class="fas fa-file-pdf"></i> Cetak PDF'
                     },
                     {
                         extend: 'excel',
@@ -263,7 +263,7 @@
                             columns: [1, 2, 3, 4, 5],
                         },
                         className: 'btn btn-success btn-sm ml-1',
-                        text: '<i class="fas fa-file-excel"></i>'
+                        text: '<i class="fas fa-file-excel"></i> Cetak Excel'
                     },
                 ],
                 language: {

@@ -250,7 +250,7 @@ class ChecklistRecordController extends Controller
         }
 
         if ($checklistRecords->isEmpty()) {
-            return back()->with('error', 'Data tidak ditemukan');
+            return back()->with('error', 'Tidak ada data yang bisa diexport');
         }
 
         if ($checklistRecords->contains('status_verif', 'unverified')) {
@@ -261,5 +261,11 @@ class ChecklistRecordController extends Controller
         $pdf->setPaper('a4', 'landscape');
 
         return $pdf->download('laporan-pengecekan-p3k.pdf');
+    }
+
+    public function printRecords()
+    {
+
+        return view('dashboard.checklist_records.print');
     }
 }

@@ -72,6 +72,7 @@ class ChecklistRecord extends Model
     public function scopeNotVerified($query)
     {
         return $query->where('status_verif', 'unverified')
-            ->whereNotNull('updated_by');
+            ->whereNotNull('updated_by')
+            ->orderBy('updated_at', 'desc');
     }
 }

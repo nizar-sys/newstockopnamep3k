@@ -590,7 +590,7 @@
                                     }
                                 },
                                 className: 'btn btn-danger btn-sm',
-                                text: '<i class="fas fa-file-pdf"></i>'
+                                text: '<i class="fas fa-file-pdf"></i> Cetak PDF'
                             },
                             {
                                 extend: 'excel',
@@ -621,7 +621,7 @@
                                     }
                                 },
                                 className: 'btn btn-success btn-sm ml-1',
-                                text: '<i class="fas fa-file-excel"></i>'
+                                text: '<i class="fas fa-file-excel"></i> Cetak Excel'
                             },
                         ],
                         language: {

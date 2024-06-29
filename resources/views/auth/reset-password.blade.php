@@ -1,48 +1,74 @@
-<x-guest-layout>
-    <x-auth-card>
-        <x-slot name="logo">
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
-        </x-slot>
+@extends('layouts.auth')
+@section('title', 'Reset Password')
 
-        <!-- Validation Errors -->
-        <x-auth-validation-errors class="mb-4" :errors="$errors" />
+@section('content')
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="{{ route('register', []) }}"><b>{{ config('app.name') }}</b></a>
+        </div>
+        <!-- /.login-logo -->
+        <div class="card">
+            <div class="card-body login-card-body">
 
-        <form method="POST" action="{{ route('password.update') }}">
-            @csrf
+                <form role="form" action="{{ route('password.update') }}" method="POST">
+                    @csrf
 
-            <!-- Password Reset Token -->
-            <input type="hidden" name="token" value="{{ $request->route('token') }}">
+                    <input type="hidden" name="token" value="{{request()->token}}">
 
-            <!-- Email Address -->
-            <div>
-                <x-label for="email" :value="__('Email')" />
+                    <div class="input-group mb-3">
+                        <input class="form-control" name="email" placeholder="Email" type="text"
+                            value="{{ old('email') }}">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-user"></span>
+                            </div>
+                        </div>
+                        @error('email')
+                            <div class="invalid-feedback d-block">*{{ $message }}</div>
+                        @enderror
+                    </div>
 
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus />
+                    <div class="input-group mb-3">
+                        <input class="form-control" name="password" placeholder="Katasandi" type="password"
+                            value="{{ old('password') }}" id="password">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+
+                        @error('password')
+                            <div class="invalid-feedback d-block">*{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input class="form-control" name="password_confirmation" placeholder="Konfirmasi Katasandi" type="password"
+                            value="{{ old('password_confirmation') }}" id="password_confirmation">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+
+                        @error('password_confirmation')
+                            <div class="invalid-feedback d-block">*{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-block">Reset Katasandi</button>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </form>
+
+                <p class="mb-1">
+                    <a href="{{ route('login', []) }}">Login</a>
+                </p>
             </div>
-
-            <!-- Password -->
-            <div class="mt-4">
-                <x-label for="password" :value="__('Password')" />
-
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required />
-            </div>
-
-            <!-- Confirm Password -->
-            <div class="mt-4">
-                <x-label for="password_confirmation" :value="__('Confirm Password')" />
-
-                <x-input id="password_confirmation" class="block mt-1 w-full"
-                                    type="password"
-                                    name="password_confirmation" required />
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <x-button>
-                    {{ __('Reset Password') }}
-                </x-button>
-            </div>
-        </form>
-    </x-auth-card>
-</x-guest-layout>
+            <!-- /.login-card-body -->
+        </div>
+    </div>
+@endsection

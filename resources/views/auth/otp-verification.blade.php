@@ -1,5 +1,5 @@
 @extends('layouts.auth')
-@section('title', 'Forgot Password')
+@section('title', 'Verify Otp')
 
 @section('content')
     <div class="login-box">
@@ -10,18 +10,20 @@
         <div class="card">
             <div class="card-body login-card-body">
 
-                <form role="form" action="{{ route('password.email') }}" method="POST">
+                <form role="form" action="{{ route('otp.validation') }}" method="POST">
                     @csrf
+                    <input type="hidden" name="type" value="{{$type}}">
+                    <input type="hidden" name="email" value="{{request()->email}}">
 
                     <div class="input-group mb-3">
-                        <input class="form-control" name="email" placeholder="Email" type="email"
-                            value="{{ old('email') }}">
+                        <input class="form-control" name="otp" placeholder="Kode OTP" type="text"
+                            value="{{ old('otp') }}">
                         <div class="input-group-append">
                             <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
+                                <span class="fas fa-user"></span>
                             </div>
                         </div>
-                        @error('email')
+                        @error('otp')
                             <div class="invalid-feedback d-block">*{{ $message }}</div>
                         @enderror
                     </div>
@@ -45,4 +47,3 @@
         </div>
     </div>
 @endsection
-ƒ

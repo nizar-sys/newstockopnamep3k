@@ -6,9 +6,12 @@
     <li class="breadcrumb-item active">Data Pengguna</li>
 @endpush
 
-@push('action_btn')
-    <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm">Tambah Data</a>
-@endpush
+@if (auth()->user()->role != 'petugas')
+
+    @push('action_btn')
+        <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm">Tambah Data</a>
+    @endpush
+@endif
 
 @section('content')
     <section class="content">
@@ -31,7 +34,9 @@
                                             <th>Email</th>
                                             <th>Role</th>
                                             <th>Avatar</th>
-                                            <th>Aksi</th>
+                                            @if (auth()->user()->role != 'petugas')
+                                                <th>Aksi</th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -47,22 +52,28 @@
                                                     <img src="{{ asset('/uploads/images/' . $user->avatar) }}"
                                                         alt="{{ $user->name }}" width="100">
                                                 </td>
-                                                <td class="d-flex jutify-content-center">
-                                                    @if ($user->id != 1)
-                                                        <a href="{{ route('users.edit', $user->id) }}"
-                                                            class="btn btn-sm btn-warning"><i
-                                                                class="fas fa-pencil-alt"></i></a>
-                                                        <form id="delete-form-{{ $user->id }}"
-                                                            action="{{ route('users.destroy', $user->id) }}" class="d-none"
-                                                            method="post">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                        </form>
-                                                        <button onclick="deleteForm('{{ $user->id }}')"
-                                                            class="btn btn-sm btn-danger ml-1"><i
-                                                                class="fas fa-trash"></i></button>
-                                                    @endif
-                                                </td>
+                                                @if (auth()->user()->role != 'petugas')
+                                                    <td class="d-flex justify-content-center">
+                                                        @if ($user->id != 1)
+                                                            @if (($user->id == auth()->id() || $user->role == 'petugas') || auth()->user()->role == 'admin')
+                                                                <a href="{{ route('users.edit', $user->id) }}"
+                                                                    class="btn btn-sm btn-warning"><i
+                                                                        class="fas fa-pencil-alt"></i></a>
+                                                                <form id="delete-form-{{ $user->id }}"
+                                                                    action="{{ route('users.destroy', $user->id) }}"
+                                                                    class="d-inline" method="post">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit"
+                                                                        class="btn btn-sm btn-danger ml-1"
+                                                                        onclick="return confirm('Are you sure you want to delete this user?')">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </button>
+                                                                </form>
+                                                            @endif
+                                                        @endif
+                                                    </td>
+                                                @endif
                                             </tr>
                                         @empty
                                             <tr>
@@ -105,14 +116,13 @@
                     '<"row"<"col-md-6"l><"col-md-6"p>>' +
                     'rt' +
                     '<"row"<"col-md-5"i><"col-md-7"p>>',
-                buttons: [
-                    {
+                buttons: [{
                         extend: 'pdf',
                         exportOptions: {
                             columns: [0, 1, 2, 3]
                         },
                         className: 'btn btn-danger btn-sm',
-                        text: '<i class="fas fa-file-pdf"></i>'
+                        text: '<i class="fas fa-file-pdf"></i> Cetak PDF'
                     },
                     {
                         extend: 'excel',
@@ -120,7 +130,7 @@
                             columns: [0, 1, 2, 3]
                         },
                         className: 'btn btn-success btn-sm ml-1',
-                        text: '<i class="fas fa-file-excel"></i>'
+                        text: '<i class="fas fa-file-excel"></i> Cetak Excel'
                     },
                 ],
                 language: {

@@ -44,6 +44,15 @@
 </li>
 
 <li class="nav-item">
+    <a class="nav-link {{ Route::is('print-records') ? 'active' : '' }}" href="{{ route('print-records') }}">
+        <i class="nav-icon fas fa-file"></i>
+        <p>
+            Cetak Laporan
+        </p>
+    </a>
+</li>
+
+<li class="nav-item">
     <a class="nav-link {{ Route::is('activity-logs.*') ? 'active' : '' }}" href="{{ route('activity-logs.index') }}">
         <i class="nav-icon fas fa-history"></i>
         <p>

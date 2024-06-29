@@ -28,6 +28,7 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Nama Ruangan</th>
+                                            <th>QR Code</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -36,6 +37,16 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $room->name }}</td>
+                                                <td>
+                                                    @if ($room->last_changes_date)
+                                                        {!! QrCode::size(100)->generate(
+                                                            route('landing.checklist', [
+                                                                'room_id' => $room->id,
+                                                                'date' => $room->last_changes_date,
+                                                            ]),
+                                                        ) !!}
+                                                    @endif
+                                                </td>
                                                 <td class="d-flex jutify-content-center">
                                                     <a href="{{ route('rooms.show', $room->id) }}"
                                                         class="btn btn-sm btn-primary">
@@ -107,7 +118,7 @@
                             columns: [0, 1]
                         },
                         className: 'btn btn-danger btn-sm',
-                        text: '<i class="fas fa-file-pdf"></i>'
+                        text: '<i class="fas fa-file-pdf"></i> Cetak PDF'
                     },
                     {
                         extend: 'excel',
@@ -115,7 +126,7 @@
                             columns: [0, 1]
                         },
                         className: 'btn btn-success btn-sm ml-1',
-                        text: '<i class="fas fa-file-excel"></i>'
+                        text: '<i class="fas fa-file-excel"></i> Cetak Excel'
                     },
                 ],
                 language: {

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Ichtrojan\Otp\Otp;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 
 class PasswordResetLinkController extends Controller
@@ -29,19 +31,17 @@ class PasswordResetLinkController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'email' => ['required', 'email'],
+            'email' => ['required', 'email', 'exists:users'],
         ]);
 
-        // We will send the password reset link to this user. Once we have attempted
-        // to send the link, we will examine the response then see the message we
-        // need to show to the user. Finally, we'll send out a proper response.
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
+        $otp = (new Otp)->generate($request->email, 'numeric', 6);
 
-        return $status == Password::RESET_LINK_SENT
-                    ? back()->with('status', __($status))
-                    : back()->withInput($request->only('email'))
-                            ->withErrors(['email' => __($status)]);
+        // send email
+        Mail::send('emails.otp', ['otp' => $otp], function ($message) use ($request) {
+            $message->to($request->email);
+            $message->subject('Kode OTP untuk reset password');
+        });
+
+        return redirect('/otp-verification?email=' . $request->email . '&type=forgot%20password')->with('success', 'Akun berhasil dibuat. Silahkan cek email untuk verifikasi kode OTP');
     }
 }

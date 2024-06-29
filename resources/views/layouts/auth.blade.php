@@ -16,6 +16,8 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('newassets') }}/dist/css/adminlte.min.css">
     @stack('style')
+    <link rel="stylesheet" href="{{ asset('/assets/css//snackbar.min.css') }}">
+    <script src="{{ asset('/assets/js/snackbar.min.js') }}"></script>
 </head>
 
 <body class="hold-transition login-page">
@@ -29,6 +31,27 @@
     <!-- AdminLTE App -->
     <script src="{{ asset('newassets') }}/dist/js/adminlte.min.js"></script>
     @yield('script')
+    <script>
+        @if (Session::has('success'))
+            Snackbar.show({
+                text: "{{ session('success') }}",
+                backgroundColor: '#28a745',
+                actionTextColor: '#212529',
+            })
+        @elseif (Session::has('error'))
+            Snackbar.show({
+                text: "{{ session('error') }}",
+                backgroundColor: '#dc3545',
+                actionTextColor: '#212529',
+            })
+        @elseif (Session::has('info'))
+            Snackbar.show({
+                text: "{{ session('info') }}",
+                backgroundColor: '#17a2b8',
+                actionTextColor: '#212529',
+            })
+        @endif ;
+    </script>
 </body>
 
 </html>

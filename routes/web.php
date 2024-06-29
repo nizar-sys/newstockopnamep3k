@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function() {
     Route::resource('rooms', RoomController::class);
 
     Route::prefix('/checklist-records')->group(function(){
+        Route::get('/print', [ChecklistRecordController::class, 'printRecords'])->name('print-records');
         Route::get('/export', [ChecklistRecordController::class, 'exportRecords'])->name('checklist-records.export');
         Route::post('/items', [ChecklistRecordController::class, 'storeItem'])->name('checklist-records.item.store');
         Route::put('/items/{item}', [ChecklistRecordController::class, 'updateItem'])->name('checklist-records.item.update');
