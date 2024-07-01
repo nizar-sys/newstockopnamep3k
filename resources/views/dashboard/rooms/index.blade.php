@@ -39,12 +39,16 @@
                                                 <td>{{ $room->name }}</td>
                                                 <td>
                                                     @if ($room->last_changes_date)
-                                                        {!! QrCode::size(100)->generate(
-                                                            route('landing.checklist', [
-                                                                'room_id' => $room->id,
-                                                                'date' => $room->last_changes_date,
-                                                            ]),
-                                                        ) !!}
+                                                        <img src="data:image/png;base64,
+                                                        {!! base64_encode(
+                                                            QrCode::format('png')->size(100)->generate(
+                                                                    route('landing.checklist', [
+                                                                        'room_id' => $room->id,
+                                                                        'date' => $room->last_changes_date,
+                                                                    ]),
+                                                                ),
+                                                        ) !!}"
+                                                            alt="QR Code">
                                                     @endif
                                                 </td>
                                                 <td class="d-flex jutify-content-center">
