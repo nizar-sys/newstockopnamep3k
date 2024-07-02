@@ -191,7 +191,8 @@
                                                 @forelse ($checklistRecords as $checklist)
                                                     <tr>
                                                         <td><input type="checkbox" name="item_id[]"
-                                                                value="{{ $checklist->item_id }}" class="check-data" disabled>
+                                                                value="{{ $checklist->item_id }}" class="check-data"
+                                                                disabled>
                                                         </td>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $checklist->item_name }}</td>
@@ -670,9 +671,16 @@
                                 format: 'YYYY-MM-DD',
                                 cancelLabel: 'Clear',
                             }
-                        }, function(start, end, label) {
+                        });
+
+                        $('#periode').on('cancel.daterangepicker', function(ev, picker) {
+                            selectedDates = [];
+                            updateInput();
+                        });
+
+                        $('#periode').on('apply.daterangepicker', function(ev, picker) {
                             if (isSingleDatePicker) {
-                                var date = start.format('YYYY-MM-DD');
+                                var date = picker.startDate.format('YYYY-MM-DD');
                                 if (selectedDates.includes(date)) {
                                     selectedDates = selectedDates.filter(d => d !== date);
                                 } else {
@@ -680,14 +688,9 @@
                                 }
                                 updateInput();
                             } else {
-                                $('#periode').val(start.format('YYYY-MM-DD') + ' - ' + end.format(
-                                    'YYYY-MM-DD'));
+                                $('#periode').val(picker.startDate.format('YYYY-MM-DD') + ' - ' +
+                                    picker.endDate.format('YYYY-MM-DD'));
                             }
-                        });
-
-                        $('#periode').on('cancel.daterangepicker', function(ev, picker) {
-                            selectedDates = [];
-                            updateInput();
                         });
                     }
 
@@ -725,9 +728,7 @@
                         }
 
                         var url = "/checklist-records/export?type=" + type + "&dates=" + dates +
-                            "&room_id=" +
-                            roomDetail.id;
-
+                            "&room_id=" + roomDetail.id;
                         window.open(url, '_blank');
                     });
                 });

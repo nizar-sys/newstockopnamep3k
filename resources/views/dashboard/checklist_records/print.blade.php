@@ -140,9 +140,16 @@
                             format: 'YYYY-MM-DD',
                             cancelLabel: 'Clear',
                         }
-                    }, function(start, end, label) {
+                    });
+
+                    $('#periode').on('cancel.daterangepicker', function(ev, picker) {
+                        selectedDates = [];
+                        updateInput();
+                    });
+
+                    $('#periode').on('apply.daterangepicker', function(ev, picker) {
                         if (isSingleDatePicker) {
-                            var date = start.format('YYYY-MM-DD');
+                            var date = picker.startDate.format('YYYY-MM-DD');
                             if (selectedDates.includes(date)) {
                                 selectedDates = selectedDates.filter(d => d !== date);
                             } else {
@@ -150,14 +157,9 @@
                             }
                             updateInput();
                         } else {
-                            $('#periode').val(start.format('YYYY-MM-DD') + ' - ' + end.format(
-                                'YYYY-MM-DD'));
+                            $('#periode').val(picker.startDate.format('YYYY-MM-DD') + ' - ' +
+                                picker.endDate.format('YYYY-MM-DD'));
                         }
-                    });
-
-                    $('#periode').on('cancel.daterangepicker', function(ev, picker) {
-                        selectedDates = [];
-                        updateInput();
                     });
 
                     $('input[name="type"]').val(isSingleDatePicker ? 'single' : 'range');
