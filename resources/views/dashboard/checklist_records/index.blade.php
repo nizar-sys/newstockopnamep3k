@@ -172,7 +172,9 @@
                                         <table class="table table-bordered table-striped" id="table">
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>
+                                                    <th>
+                                                        <input type="checkbox" class="check-all" disabled>
+                                                    </th>
                                                     <th>No</th>
                                                     <th>Item P3K</th>
                                                     <th>Jumlah Standar</th>
@@ -189,7 +191,7 @@
                                                 @forelse ($checklistRecords as $checklist)
                                                     <tr>
                                                         <td><input type="checkbox" name="item_id[]"
-                                                                value="{{ $checklist->item_id }}" class="check-data">
+                                                                value="{{ $checklist->item_id }}" class="check-data" disabled>
                                                         </td>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $checklist->item_name }}</td>
@@ -511,19 +513,19 @@
         $(document).ready(function() {
             initializeSelect2($('#room_id'), '/api/rooms');
 
-            $('.check-data').on('change', function() {
-                if ($('.check-data:checked').length > 0) {
-                    $('.save-dataset').removeClass('d-none');
-                } else {
-                    $('.save-dataset').addClass('d-none');
-                }
+            // $('.check-data').on('change', function() {
+            //     if ($('.check-data:checked').length > 0) {
+            //         $('.save-dataset').removeClass('d-none');
+            //     } else {
+            //         $('.save-dataset').addClass('d-none');
+            //     }
 
-                var row = $(this).closest('tr');
+            //     var row = $(this).closest('tr');
 
-                row.find('select, textarea, input[type="number"]').each(function() {
-                    $(this).prop('disabled', !$(this).prop('disabled'));
-                });
-            });
+            //     row.find('select, textarea, input[type="number"]').each(function() {
+            //         $(this).prop('disabled', !$(this).prop('disabled'));
+            //     });
+            // });
 
             $('.edit-dataset').on('click', function(event) {
                 event.preventDefault();
@@ -534,21 +536,38 @@
 
                 $('.save-dataset').toggleClass('d-none');
 
-                $('input[type="number"], select, textarea').each(function() {
+                $('input, select, textarea').each(function() {
                     $(this).prop('disabled', function(i, v) {
                         return !v;
                     });
                 });
 
-                $('.check-data').prop('checked', function(i, v) {
-                    return !v;
-                });
+                // $('.check-data').prop('checked', function(i, v) {
+                //     return !v;
+                // });
+            });
+
+            $('.check-all').on('change', function() {
+                $('.check-data').prop('checked', $(this).prop('checked'));
             });
 
             $('.add-item').on('click', addItem);
 
             $('.save-dataset').on('click', function() {
                 event.preventDefault();
+                // jika tidak ada check-data yang di check maka tampilkan alert
+                if ($('.check-data:checked').length == 0) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Pilih item terlebih dahulu!',
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
 
                 saveDataset();
             });
@@ -629,7 +648,8 @@
                                 previous: '<i class="fas fa-chevron-left"></i>',
                                 next: '<i class="fas fa-chevron-right"></i>'
                             }
-                        }
+                        },
+                        pageLength: 50,
                     });
                 });
 

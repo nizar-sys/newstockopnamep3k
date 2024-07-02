@@ -109,11 +109,6 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div class="card-footer">
-                                    <div class="card-tools">
-                                        <a href="{{ url('/', []) }}" class="btn btn-sm btn-secondary float-lef">Kembali</a>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     @endif

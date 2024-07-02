@@ -76,7 +76,7 @@ class RegisteredUserController extends Controller
 
         $otp = (new Otp)->validate($request->email, $request->otp);
 
-        if (!$otp) {
+        if (!$otp->status) {
             return back()->with('error', 'Kode OTP tidak valid');
         }
 

@@ -21,7 +21,8 @@
                         @endif
                         <div class="card-footer">
                             <div class="card-tools">
-                                <button class="btn btn-sm btn-success float-right d-none" id="verif-all-data"><i
+                                <a href="#" class="btn btn-sm btn-warning float-right edit-dataset ml-2">Edit</a>
+                                <button class="btn btn-sm btn-success float-right d-none verif-all-data"><i
                                         class="fas fa-check"></i> Verifikasi</button>
                             </div>
                         </div>
@@ -31,7 +32,7 @@
                                     <thead>
                                         <tr>
                                             <th>
-                                                <input type="checkbox" id="check-all">
+                                                <input type="checkbox" id="check-all" disabled>
                                             </th>
                                             <th>No</th>
                                             <th>Detail Waktu</th>
@@ -46,7 +47,7 @@
                                             <tr>
                                                 <td>
                                                     <input type="checkbox" name="checklist_record_id[]"
-                                                        value="{{ $record->id }}" class="check-data">
+                                                        value="{{ $record->id }}" class="check-data" disabled>
                                                 </td>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>@date_formatted($record->created_at)</td>
@@ -72,6 +73,13 @@
                                         @endforelse
                                     </tbody>
                                 </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="card-tools">
+                                <button class="btn btn-sm btn-success float-left d-none verif-all-data"><i
+                                    class="fas fa-check"></i> Verifikasi</button>
+                                <a href="#" class="btn btn-sm btn-warning float-left edit-dataset ml-2">Edit</a>
                             </div>
                         </div>
                     </div>
@@ -139,7 +147,7 @@
         }
 
         $(document).ready(function() {
-            $('#verif-all-data').click(function() {
+            $('.verif-all-data').click(function() {
                 let checklistRecordId = [];
                 $('.check-data').each(function() {
                     if ($(this).is(':checked')) {
@@ -271,7 +279,28 @@
                         previous: '<i class="fas fa-chevron-left"></i>',
                         next: '<i class="fas fa-chevron-right"></i>'
                     }
-                }
+                },
+                pageLength: 50,
+            });
+
+            $('.edit-dataset').on('click', function(event) {
+                event.preventDefault();
+
+                $('.edit-dataset').text(function(i, text) {
+                    return text === 'Edit' ? 'Cancel' : 'Edit';
+                });
+
+                $('.verif-all-data').toggleClass('d-none');
+
+                $('input, select, textarea').each(function() {
+                    $(this).prop('disabled', function(i, v) {
+                        return !v;
+                    });
+                });
+
+                // $('.check-data').prop('checked', function(i, v) {
+                //     return !v;
+                // });
             });
         });
     </script>

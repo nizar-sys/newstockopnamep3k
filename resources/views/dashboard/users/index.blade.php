@@ -34,9 +34,7 @@
                                             <th>Email</th>
                                             <th>Role</th>
                                             <th>Avatar</th>
-                                            @if (auth()->user()->role != 'petugas')
-                                                <th>Aksi</th>
-                                            @endif
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -52,28 +50,26 @@
                                                     <img src="{{ asset('/uploads/images/' . $user->avatar) }}"
                                                         alt="{{ $user->name }}" width="100">
                                                 </td>
-                                                @if (auth()->user()->role != 'petugas')
-                                                    <td class="d-flex justify-content-center">
-                                                        @if ($user->id != 1)
-                                                            @if (($user->id == auth()->id() || $user->role == 'petugas') || auth()->user()->role == 'admin')
-                                                                <a href="{{ route('users.edit', $user->id) }}"
-                                                                    class="btn btn-sm btn-warning"><i
-                                                                        class="fas fa-pencil-alt"></i></a>
-                                                                <form id="delete-form-{{ $user->id }}"
-                                                                    action="{{ route('users.destroy', $user->id) }}"
-                                                                    class="d-inline" method="post">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <button type="submit"
-                                                                        class="btn btn-sm btn-danger ml-1"
-                                                                        onclick="return confirm('Are you sure you want to delete this user?')">
-                                                                        <i class="fas fa-trash"></i>
-                                                                    </button>
-                                                                </form>
-                                                            @endif
+                                                <td class="d-flex justify-content-center">
+                                                    @if ($user->id != 1)
+                                                        @if (($user->id == auth()->id() || $user->role == 'petugas') || auth()->user()->role == 'admin')
+                                                            <a href="{{ route('users.edit', $user->id) }}"
+                                                                class="btn btn-sm btn-warning"><i
+                                                                    class="fas fa-pencil-alt"></i></a>
+                                                            <form id="delete-form-{{ $user->id }}"
+                                                                action="{{ route('users.destroy', $user->id) }}"
+                                                                class="d-inline" method="post">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit"
+                                                                    class="btn btn-sm btn-danger ml-1"
+                                                                    onclick="return confirm('Are you sure you want to delete this user?')">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            </form>
                                                         @endif
-                                                    </td>
-                                                @endif
+                                                    @endif
+                                                </td>
                                             </tr>
                                         @empty
                                             <tr>
@@ -138,7 +134,8 @@
                         previous: '<i class="fas fa-chevron-left"></i>',
                         next: '<i class="fas fa-chevron-right"></i>'
                     }
-                }
+                },
+                pageLength: 50,
             });
         });
     </script>

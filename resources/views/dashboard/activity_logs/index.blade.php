@@ -93,7 +93,8 @@
                     previous: '<i class="fas fa-chevron-left"></i>',
                     next: '<i class="fas fa-chevron-right"></i>'
                 }
-            }
+            },
+            pageLength: 50,
         });
     </script>
 @endsection

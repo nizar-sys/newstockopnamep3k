@@ -25,7 +25,7 @@ use App\Http\Controllers\TreeviewController;
 */
 
 # ------ Unauthenticated routes ------ #
-Route::get('/', [RouteController::class, 'home']);
+Route::get('/', [AuthenticatedSessionController::class, 'create']);
 Route::get('/scan-checklist-records', [RouteController::class, 'checklistRecords'])->name('landing.checklist');
 require __DIR__.'/auth.php';
 
@@ -57,6 +57,6 @@ Route::middleware('auth')->group(function() {
     Route::prefix('/approval-records')->group(function(){
         Route::post('/approve', [ApprovalRecordsController::class, 'approveChecklist'])->name('approval-records.checklist.store');
     });
-    Route::resource('approval-records', ApprovalRecordsController::class);
+    Route::resource('approval-records', ApprovalRecordsController::class)->middleware('roles:admin,atasan');
     Route::resource('activity-logs', ActivityLogController::class);
 });

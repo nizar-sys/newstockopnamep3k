@@ -34,14 +34,16 @@
     </a>
 </li>
 
-<li class="nav-item">
-    <a class="nav-link {{ Route::is('approval-records.*') ? 'active' : '' }}" href="{{ route('approval-records.index') }}">
-        <i class="nav-icon fas fa-clipboard-check"></i>
-        <p>
-            Approval Records
-        </p>
-    </a>
-</li>
+@if (in_array(auth()->user()->role, ['admin', 'atasan']))
+    <li class="nav-item">
+        <a class="nav-link {{ Route::is('approval-records.*') ? 'active' : '' }}" href="{{ route('approval-records.index') }}">
+            <i class="nav-icon fas fa-clipboard-check"></i>
+            <p>
+                Approval Records
+            </p>
+        </a>
+    </li>
+@endif
 
 <li class="nav-item">
     <a class="nav-link {{ Route::is('print-records') ? 'active' : '' }}" href="{{ route('print-records') }}">
