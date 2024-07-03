@@ -45,4 +45,3 @@
         </div>
     </div>
 @endsection
-ƒ

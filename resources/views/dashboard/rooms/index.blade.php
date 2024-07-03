@@ -39,21 +39,38 @@
                                                 <td>{{ $room->name }}</td>
                                                 <td>
                                                     @if ($room->last_changes_date)
-                                                        <img src="data:image/png;base64,
-                                                        {!! base64_encode(
-                                                            QrCode::format('png')->size(100)->generate(
-                                                                    route('landing.checklist', [
-                                                                        'room_id' => $room->id,
-                                                                        'date' => $room->last_changes_date,
-                                                                    ]),
-                                                                ),
-                                                        ) !!}"
-                                                            alt="QR Code">
+                                                        @php
+                                                            $routeUrl = route('landing.checklist', [
+                                                                'room_id' => $room->id,
+                                                                'date' => $room->last_changes_date,
+                                                            ]);
+
+                                                            $qrCode = base64_encode(
+                                                                QrCode::format('png')->size(100)->generate($routeUrl),
+                                                            );
+                                                            $downloadQrcode = base64_encode(
+                                                                QrCode::format('png')->size(300)->generate($routeUrl),
+                                                            );
+                                                        @endphp
+
+                                                        <a href="data:image/png;base64,{{ $downloadQrcode }}"
+                                                            download="QRCode_{{ $room->name }}.png"
+                                                            rel="noopener noreferrer">
+                                                            <img src="data:image/png;base64,{{ $qrCode }}"
+                                                                alt="QR Code">
+                                                        </a>
                                                     @endif
                                                 </td>
                                                 <td class="d-flex jutify-content-center">
+                                                    @if ($room->last_changes_date)
+                                                        <a href="data:image/png;base64,{{ $downloadQrcode }}"
+                                                            download="QRCode_{{ $room->name }}.png"
+                                                            rel="noopener noreferrer" class="btn btn-sm btn-success">
+                                                            <i class="fas fa-download"></i>
+                                                        </a>
+                                                    @endif
                                                     <a href="{{ route('rooms.show', $room->id) }}"
-                                                        class="btn btn-sm btn-primary">
+                                                        class="btn btn-sm btn-primary ml-1">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16"
                                                             height="16" fill="currentColor"
                                                             class="bi bi-list-columns-reverse" viewBox="0 0 16 16">

@@ -75,13 +75,6 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="card-footer">
-                            <div class="card-tools">
-                                <button class="btn btn-sm btn-success float-left d-none verif-all-data"><i
-                                    class="fas fa-check"></i> Verifikasi</button>
-                                <a href="#" class="btn btn-sm btn-warning float-left edit-dataset ml-2">Edit</a>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

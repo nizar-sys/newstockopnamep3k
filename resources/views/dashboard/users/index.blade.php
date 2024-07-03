@@ -52,17 +52,36 @@
                                                 </td>
                                                 <td class="d-flex justify-content-center">
                                                     @if ($user->id != 1)
-                                                        @if (($user->id == auth()->id() || $user->role == 'petugas') || auth()->user()->role == 'admin')
+                                                        @php
+                                                            $currentUser = auth()->user();
+                                                            $canEditOrDelete = false;
+
+                                                            if ($currentUser->role == 'admin') {
+                                                                $canEditOrDelete = true;
+                                                            } elseif (
+                                                                $currentUser->role == 'atasan' &&
+                                                                in_array($user->role, ['petugas']) || $currentUser->id == $user->id
+                                                            ) {
+                                                                $canEditOrDelete = true;
+                                                            } elseif (
+                                                                $currentUser->role == 'petugas' &&
+                                                                $currentUser->id == $user->id
+                                                            ) {
+                                                                $canEditOrDelete = true;
+                                                            }
+                                                        @endphp
+
+                                                        @if ($canEditOrDelete)
                                                             <a href="{{ route('users.edit', $user->id) }}"
-                                                                class="btn btn-sm btn-warning"><i
-                                                                    class="fas fa-pencil-alt"></i></a>
+                                                                class="btn btn-sm btn-warning">
+                                                                <i class="fas fa-pencil-alt"></i>
+                                                            </a>
                                                             <form id="delete-form-{{ $user->id }}"
                                                                 action="{{ route('users.destroy', $user->id) }}"
                                                                 class="d-inline" method="post">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button type="submit"
-                                                                    class="btn btn-sm btn-danger ml-1"
+                                                                <button type="submit" class="btn btn-sm btn-danger ml-1"
                                                                     onclick="return confirm('Are you sure you want to delete this user?')">
                                                                     <i class="fas fa-trash"></i>
                                                                 </button>

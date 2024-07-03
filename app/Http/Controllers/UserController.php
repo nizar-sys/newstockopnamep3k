@@ -15,7 +15,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::orderByDesc('id')->get();
+        $users = User::get();
 
         return view('dashboard.users.index', compact('users'));
     }

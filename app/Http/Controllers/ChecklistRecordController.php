@@ -238,7 +238,8 @@ class ChecklistRecordController extends Controller
             foreach (explode(', ', $request->dates) as $date) {
                 $checklistRecords = $checklistRecords->merge(ChecklistRecord::whereHas('item', function ($query) use ($roomId) {
                     $query->where('room_id', $roomId);
-                })->whereDate('created_at', $date)->get());
+                })->whereDate('created_at', $date)->get())
+                ->sortBy('created_at');
             }
         } else {
             $startDate = Carbon::parse(explode(' - ', $request->dates)[0])->format('Y-m-d');

@@ -78,9 +78,9 @@
                             ->sortByDesc('updated_at')
                             ->first();
                     @endphp
-                    @if ($checklistRecordsUnsaved->count() == 0 && !$lastChecklistRecord)
+                    @if ($hasDataset && $checklistRecordsUnsaved->count() == 0 && !$lastChecklistRecord)
                         <div class="alert bg-warning custom-alert-warning" role="alert">
-                            Pada tanggal <b>@date_formatted($dateSelected)</b> ini tidak ada pengecekan yang belum terjadi.
+                            Pada tanggal <b>@date_formatted($dateSelected)</b> ini tidak ada pengecekan yang terjadi.
                         </div>
                     @endif
                     @if ($lastChecklistRecord)

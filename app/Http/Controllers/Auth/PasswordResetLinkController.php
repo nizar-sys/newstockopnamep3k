@@ -40,8 +40,9 @@ class PasswordResetLinkController extends Controller
         Mail::send('emails.otp', ['otp' => $otp], function ($message) use ($request) {
             $message->to($request->email);
             $message->subject('Kode OTP untuk reset password');
+            $message->from('admin@gmail.com');
         });
 
-        return redirect('/otp-verification?email=' . $request->email . '&type=forgot%20password')->with('success', 'Akun berhasil dibuat. Silahkan cek email untuk verifikasi kode OTP');
+        return redirect('/otp-verification?email=' . $request->email . '&type=forgot%20password')->with('success', 'Kode reset password telah dikirim. Silahkan cek email Anda.');
     }
 }

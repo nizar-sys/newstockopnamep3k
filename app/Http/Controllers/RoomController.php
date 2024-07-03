@@ -19,7 +19,7 @@ class RoomController extends Controller
      */
     public function index()
     {
-        $rooms = Room::with('items.checklistRecords')->orderByDesc('id')->get();
+        $rooms = Room::with('items.checklistRecords')->get();
 
         return view('dashboard.rooms.index', compact('rooms'));
     }

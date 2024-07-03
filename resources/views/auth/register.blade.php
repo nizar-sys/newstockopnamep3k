@@ -79,7 +79,7 @@
                 </form>
 
                 <p class="mb-1">
-                    Sudah punya akun ? login di <a href="{{ route('password.request') }}">sini.</a>
+                    Sudah punya akun ? login di <a href="{{ route('login') }}">sini.</a>
                 </p>
             </div>
             <!-- /.login-card-body -->
