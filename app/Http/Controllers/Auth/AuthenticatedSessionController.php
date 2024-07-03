@@ -44,7 +44,7 @@ class AuthenticatedSessionController extends Controller
             Mail::send('emails.otp', ['otp' => $otp], function ($message) use ($request) {
                 $message->to($request->email);
                 $message->subject('Kode OTP');
-                $message->from('admin@gmail.com');
+                $message->from('ryougi4444@gmail.com');
             });
 
             return redirect('/otp-verification?email=' . $request->email . '&type=validation')->with('success', 'Akun berhasil dibuat. Silahkan cek email untuk verifikasi kode OTP');
