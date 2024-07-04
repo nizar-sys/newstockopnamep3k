@@ -62,8 +62,8 @@
                                                 </td>
                                                 <td class="d-flex jutify-content-center">
                                                     <button onclick="approveForm('{{ $record->id }}')"
-                                                        class="btn btn-sm btn-success ml-1"><i
-                                                            class="fas fa-check"></i> Verifikasi</button>
+                                                        class="btn btn-sm btn-success ml-1"><i class="fas fa-check"></i>
+                                                        Verifikasi</button>
                                                 </td>
                                             </tr>
                                         @empty
@@ -97,45 +97,47 @@
                 cancelButtonColor: '#d33',
                 cancelButtonText: 'Batal!'
             }).then((result) => {
-                $.ajax({
-                    url: urlRoot + '/approval-records/approve',
-                    type: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        checklist_record_id: checklistId
-                    },
-                    success: function(response) {
-                        Swal.fire({
-                            title: 'Success',
-                            text: response.message || 'Data berhasil terverifikasi!',
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'OK'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: urlRoot + '/approval-records/approve',
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            checklist_record_id: checklistId
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success',
+                                text: response.message || 'Data berhasil terverifikasi!',
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                }
+                            });
+
+                            setTimeout(() => {
                                 location.reload();
-                            }
-                        });
+                            }, 1000);
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                title: 'Error',
+                                text: xhr.responseJSON.message || 'Terjadi kesalahan!',
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            });
+                        }
 
-                        setTimeout(() => {
-                            location.reload();
-                        }, 1000);
-                    },
-                    error: function(xhr, status, error) {
-                        Swal.fire({
-                            title: 'Error',
-                            text: xhr.responseJSON.message || 'Terjadi kesalahan!',
-                            icon: 'error',
-                            showCancelButton: false,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'OK'
-                        });
-                    }
-
-                });
+                    });
+                }
             })
         }
 
@@ -158,47 +160,49 @@
                         cancelButtonColor: '#d33',
                         cancelButtonText: 'Batal!'
                     }).then((result) => {
-                        $.ajax({
-                            url: urlRoot + '/approval-records/approve',
-                            type: 'POST',
-                            data: {
-                                _token: '{{ csrf_token() }}',
-                                checklist_record_id: checklistRecordId
-                            },
-                            success: function(response) {
-                                Swal.fire({
-                                    title: 'Success',
-                                    text: response.message ||
-                                        'Data berhasil terverifikasi!',
-                                    icon: 'success',
-                                    showCancelButton: false,
-                                    confirmButtonColor: '#3085d6',
-                                    cancelButtonColor: '#d33',
-                                    confirmButtonText: 'OK'
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: urlRoot + '/approval-records/approve',
+                                type: 'POST',
+                                data: {
+                                    _token: '{{ csrf_token() }}',
+                                    checklist_record_id: checklistRecordId
+                                },
+                                success: function(response) {
+                                    Swal.fire({
+                                        title: 'Success',
+                                        text: response.message ||
+                                            'Data berhasil terverifikasi!',
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'OK'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+
+                                    setTimeout(() => {
                                         location.reload();
-                                    }
-                                });
+                                    }, 1000);
+                                },
+                                error: function(xhr, status, error) {
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: xhr.responseJSON.message ||
+                                            'Terjadi kesalahan!',
+                                        icon: 'error',
+                                        showCancelButton: false,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'OK'
+                                    });
+                                }
 
-                                setTimeout(() => {
-                                    location.reload();
-                                }, 1000);
-                            },
-                            error: function(xhr, status, error) {
-                                Swal.fire({
-                                    title: 'Error',
-                                    text: xhr.responseJSON.message ||
-                                        'Terjadi kesalahan!',
-                                    icon: 'error',
-                                    showCancelButton: false,
-                                    confirmButtonColor: '#3085d6',
-                                    cancelButtonColor: '#d33',
-                                    confirmButtonText: 'OK'
-                                });
-                            }
-
-                        });
+                            });
+                        }
                     })
                 } else {
                     Swal.fire({

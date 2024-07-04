@@ -25,14 +25,13 @@ class RequestStoreOrUpdateUser extends FormRequest
     {
         $rules = [
             'name' => 'required|max:255',
-            'email' => 'required|email|',
+            'email' => 'required|email|unique:users,email,' . ($this->user ? $this->user : null),
             'role' => 'required',
         ];
 
         if($this->isMethod('POST')){
             $rules['password'] = 'required|min:6';
             $rules['confirmation_password'] = 'required|same:password';
-            $rules['email'] .= 'unique:users,id,'.$this->user()->id;
             $rules['avatar'] = 'image|mimes:jpeg,png,jpg,gif,svg|max:2048';
         }
 

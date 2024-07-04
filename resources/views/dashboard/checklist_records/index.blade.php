@@ -49,7 +49,8 @@
                                         <div id="datepicker-container">
                                             <div class="form-group mb-3">
                                                 <label for="periode">Periode</label>
-                                                <input type="text" class="form-control" id="periode" name="periode" placeholder="Select dates or range">
+                                                <input type="text" class="form-control" id="periode" name="periode"
+                                                    placeholder="Select dates or range">
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label for="mode">Mode</label>
@@ -292,44 +293,46 @@
                 cancelButtonColor: '#d33',
                 cancelButtonText: 'Batal!'
             }).then((result) => {
-                $.ajax({
-                    url,
-                    type: 'DELETE',
-                    data: {
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        Swal.fire({
-                            title: 'Success',
-                            text: response.message || 'Data berhasil dihapus!',
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'OK'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url,
+                        type: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success',
+                                text: response.message || 'Data berhasil dihapus!',
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                }
+                            });
+
+                            setTimeout(() => {
                                 location.reload();
-                            }
-                        });
+                            }, 1000);
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                title: 'Error',
+                                text: xhr.responseJSON.message || 'Terjadi kesalahan!',
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            });
+                        }
 
-                        setTimeout(() => {
-                            location.reload();
-                        }, 1000);
-                    },
-                    error: function(xhr, status, error) {
-                        Swal.fire({
-                            title: 'Error',
-                            text: xhr.responseJSON.message || 'Terjadi kesalahan!',
-                            icon: 'error',
-                            showCancelButton: false,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'OK'
-                        });
-                    }
-
-                });
+                    });
+                }
             })
         }
 
@@ -716,7 +719,7 @@
                             return;
                         }
 
-                        var url = "/checklist-records/export?type=" + type + "&dates=" + dates +
+                        var url = urlRoot + "/checklist-records/export?type=" + type + "&dates=" + dates +
                             "&room_id=" + roomDetail.id;
                         window.open(url, '_blank');
                     });
@@ -752,46 +755,50 @@
                     cancelButtonColor: '#d33',
                     cancelButtonText: 'Batal!'
                 }).then((result) => {
-                    $.ajax({
-                        url: '{{ route('checklist-records.item.select-destroy') }}',
-                        type: 'DELETE',
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            room_id: roomDetail.id,
-                            item_id: data
-                        },
-                        success: function(response) {
-                            Swal.fire({
-                                title: 'Success',
-                                text: response.message || 'Data berhasil dihapus!',
-                                icon: 'success',
-                                showCancelButton: false,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'OK'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '{{ route('checklist-records.item.select-destroy') }}',
+                            type: 'DELETE',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                room_id: roomDetail.id,
+                                item_id: data
+                            },
+                            success: function(response) {
+                                Swal.fire({
+                                    title: 'Success',
+                                    text: response.message ||
+                                        'Data berhasil dihapus!',
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'OK'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        location.reload();
+                                    }
+                                });
+
+                                setTimeout(() => {
                                     location.reload();
-                                }
-                            });
+                                }, 1000);
+                            },
+                            error: function(xhr, status, error) {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: xhr.responseJSON.message ||
+                                        'Terjadi kesalahan!',
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
 
-                            setTimeout(() => {
-                                location.reload();
-                            }, 1000);
-                        },
-                        error: function(xhr, status, error) {
-                            Swal.fire({
-                                title: 'Error',
-                                text: xhr.responseJSON.message || 'Terjadi kesalahan!',
-                                icon: 'error',
-                                showCancelButton: false,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'OK'
-                            });
-                        }
-
-                    });
+                        });
+                    }
                 })
             });
         });

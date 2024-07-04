@@ -195,7 +195,7 @@
                         return;
                     }
 
-                    var url = "/checklist-records/export?type=" + type + "&dates=" + dates +
+                    var url = urlRoot + "/checklist-records/export?type=" + type + "&dates=" + dates +
                         "&room_id=" +
                         room_id;
 
