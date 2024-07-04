@@ -49,13 +49,14 @@
                                         <div id="datepicker-container">
                                             <div class="form-group mb-3">
                                                 <label for="periode">Periode</label>
-                                                <input type="text" class="form-control" id="periode" name="periode"
-                                                    placeholder="Select dates or range">
+                                                <input type="text" class="form-control" id="periode" name="periode" placeholder="Select dates or range">
                                             </div>
                                             <div class="form-group mb-3">
-                                                <button type="button" class="btn btn-primary" id="toggleMode">
-                                                    Rentang
-                                                </button>
+                                                <label for="mode">Mode</label>
+                                                <select class="form-control w-50" id="mode">
+                                                    <option value="single" selected>Pilih Tanggal</option>
+                                                    <option value="range">Rentang</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </form>
@@ -158,8 +159,9 @@
                                     <a href="#" class="btn btn-sm btn-warning float-right edit-dataset ml-2">Edit</a>
                                     <a href="#" class="btn btn-sm btn-success float-right add-item ml-2">Tambah
                                         Item</a>
-                                    <a href="#" class="btn btn-sm btn-danger float-right" data-toggle="modal"
+                                    <a href="#" class="btn btn-sm btn-danger float-right ml-2" data-toggle="modal"
                                         data-target="#dateModal">Export Data</a>
+                                    <a href="#" class="btn btn-sm btn-danger float-right delete-item">Hapus Item</a>
                                 </div>
                             </div>
                             <form action="{{ route('checklist-records.store') }}" method="post" id="store-dataset">
@@ -252,7 +254,10 @@
                             </form>
                             <div class="card-footer">
                                 <div class="card-tools">
-                                    <a href="#" class="btn btn-sm btn-success float-left add-item">Tambah
+                                    <a href="#" class="btn btn-sm btn-danger float-left delete-item">Hapus Item</a>
+                                    <a href="#" class="btn btn-sm btn-danger float-left ml-2" data-toggle="modal"
+                                        data-target="#dateModal">Export Data</a>
+                                    <a href="#" class="btn btn-sm btn-success float-left add-item ml-2">Tambah
                                         Item</a>
                                     <a href="#" class="btn btn-sm btn-warning float-left edit-dataset ml-2">Edit</a>
                                     <a href="#"
@@ -514,20 +519,6 @@
         $(document).ready(function() {
             initializeSelect2($('#room_id'), '/api/rooms');
 
-            // $('.check-data').on('change', function() {
-            //     if ($('.check-data:checked').length > 0) {
-            //         $('.save-dataset').removeClass('d-none');
-            //     } else {
-            //         $('.save-dataset').addClass('d-none');
-            //     }
-
-            //     var row = $(this).closest('tr');
-
-            //     row.find('select, textarea, input[type="number"]').each(function() {
-            //         $(this).prop('disabled', !$(this).prop('disabled'));
-            //     });
-            // });
-
             $('.edit-dataset').on('click', function(event) {
                 event.preventDefault();
 
@@ -696,12 +687,10 @@
 
                     initializeDatepicker();
 
-                    $('#toggleMode').click(function() {
+                    $('#mode').change(function() {
                         isSingleDatePicker = !isSingleDatePicker;
-                        selectedDates = [];
                         $('#periode').val('');
                         $('#periode').data('daterangepicker').remove();
-                        $(this).text(isSingleDatePicker ? 'Rentang' : 'Pilih Tanggal');
                         initializeDatepicker();
                     });
 
@@ -733,6 +722,78 @@
                     });
                 });
             }
+
+            $('.delete-item').on('click', function() {
+                event.preventDefault();
+                var data = [];
+                $('input.check-data:checked').each(function() {
+                    data.push($(this).val());
+                });
+
+                if (data.length == 0) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Pilih item terlebih dahulu!',
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
+                Swal.fire({
+                    title: 'Hapus data',
+                    text: "Anda akan menghapus data!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: 'Batal!'
+                }).then((result) => {
+                    $.ajax({
+                        url: '{{ route('checklist-records.item.select-destroy') }}',
+                        type: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            room_id: roomDetail.id,
+                            item_id: data
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success',
+                                text: response.message || 'Data berhasil dihapus!',
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                }
+                            });
+
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1000);
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                title: 'Error',
+                                text: xhr.responseJSON.message || 'Terjadi kesalahan!',
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+
+                    });
+                })
+            });
         });
     </script>
 @endsection

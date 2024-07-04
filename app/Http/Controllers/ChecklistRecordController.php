@@ -52,6 +52,31 @@ class ChecklistRecordController extends Controller
                     ->get();
             }
 
+            if ($checklistRecords->count() != $roomItems->count()) {
+                $checklistRecords = ChecklistRecord::whereIn('item_id', $roomItems->pluck('id'))
+                    ->whereDate('created_at', $dateSelected)
+                    ->get();
+
+                $roomItems->each(function ($item) use ($checklistRecords, $dateSelected) {
+                    if (!$checklistRecords->contains('item_id', $item->id)) {
+                        ChecklistRecord::create([
+                            'item_id' => $item->id,
+                            'real_qty' => 0,
+                            'minus_qty' => 0,
+                            'status' => null,
+                            'note' => null,
+                            'updated_by' => null,
+                            'created_at' => $dateSelected,
+                            'updated_at' => now(),
+                        ]);
+                    }
+                });
+
+                $checklistRecords = ChecklistRecord::whereIn('item_id', $roomItems->pluck('id'))
+                    ->whereDate('created_at', $dateSelected)
+                    ->get();
+            }
+
             $checklistRecordsUnsaved = ChecklistRecord::notVerified()
                 ->whereDate('created_at', $dateSelected)
                 ->get();
@@ -239,7 +264,7 @@ class ChecklistRecordController extends Controller
                 $checklistRecords = $checklistRecords->merge(ChecklistRecord::whereHas('item', function ($query) use ($roomId) {
                     $query->where('room_id', $roomId);
                 })->whereDate('created_at', $date)->get())
-                ->sortBy('created_at');
+                    ->sortBy('updated_at');
             }
         } else {
             $startDate = Carbon::parse(explode(' - ', $request->dates)[0])->format('Y-m-d');
@@ -247,12 +272,27 @@ class ChecklistRecordController extends Controller
 
             $checklistRecords = ChecklistRecord::whereHas('item', function ($query) use ($roomId) {
                 $query->where('room_id', $roomId);
-            })->whereBetween('created_at', [$startDate, $endDate])->get();
+            })->whereBetween('created_at', [$startDate, $endDate])
+                ->orderBy('updated_at')
+                ->get();
         }
+
+        // group by date updatde_at
+        $checklistRecords = $checklistRecords->groupBy(function ($item) {
+            return $item->created_at->format('Y-m-d');
+        })->sortKeys();
 
         if ($checklistRecords->isEmpty()) {
             return back()->with('error', 'Tidak ada data yang bisa diexport');
         }
+
+        $checklistRecordsData = collect();
+
+        foreach ($checklistRecords as $checklistRecord) {
+            $checklistRecordsData = $checklistRecordsData->merge($checklistRecord);
+        }
+
+        $checklistRecords = $checklistRecordsData;
 
         if ($checklistRecords->contains('status_verif', 'unverified')) {
             return back()->with('error', 'Data yang belum diverifikasi tidak bisa diexport');
@@ -268,5 +308,33 @@ class ChecklistRecordController extends Controller
     {
 
         return view('dashboard.checklist_records.print');
+    }
+
+    public function destroyItems(Request $request)
+    {
+        $room = Room::findOrFail($request->room_id);
+        $itemIds = collect($request->item_id);
+
+        $items = Item::whereIn('id', $itemIds)->get();
+
+        $oldItems = $room->items->toArray();
+
+        $items->each(function ($item) {
+            $item->delete();
+        });
+
+        $room->load('items');
+
+        activity('checklist_records')
+            ->causedBy(auth()->user())
+            ->performedOn($room)
+            ->withProperties([
+                'old' => $oldItems,
+                'new' => $room->items->toArray(),
+                'changes' => null,
+            ])
+            ->log('Menghapus item P3K di ruangan ' . $room->name);
+
+        return response()->json(['message' => 'Item P3K berhasil dihapus']);
     }
 }

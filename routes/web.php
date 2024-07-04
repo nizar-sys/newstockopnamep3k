@@ -51,6 +51,7 @@ Route::middleware('auth')->group(function() {
         Route::post('/items', [ChecklistRecordController::class, 'storeItem'])->name('checklist-records.item.store');
         Route::put('/items/{item}', [ChecklistRecordController::class, 'updateItem'])->name('checklist-records.item.update');
         Route::delete('/items/{item}/destroy', [ChecklistRecordController::class, 'destroyItem'])->name('checklist-records.item.destroy');
+        Route::delete('/items/destroy', [ChecklistRecordController::class, 'destroyItems'])->name('checklist-records.item.select-destroy');
     });
     Route::resource('checklist-records', ChecklistRecordController::class);
 

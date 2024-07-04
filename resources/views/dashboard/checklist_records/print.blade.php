@@ -67,11 +67,13 @@
                                         </div>
                                     </div>
                                     <div class="form-group mb-3">
-                                        <button type="button" class="btn btn-primary" id="toggleMode">
-                                            Rentang
-                                        </button>
+                                        <label for="mode">Mode</label>
+                                        <select class="form-control w-25" id="mode">
+                                            <option value="single" selected>Pilih Tanggal</option>
+                                            <option value="range">Rentang</option>
+                                        </select>
 
-                                        <button type="button" class="btn btn-success" id="export-btn">
+                                        <button type="button" class="btn btn-success mt-2" id="export-btn">
                                             Export
                                         </button>
                                     </div>
@@ -167,12 +169,10 @@
 
                 initializeDatepicker();
 
-                $('#toggleMode').click(function() {
+                $('#mode').change(function() {
                     isSingleDatePicker = !isSingleDatePicker;
-                    selectedDates = [];
                     $('#periode').val('');
                     $('#periode').data('daterangepicker').remove();
-                    $(this).text(isSingleDatePicker ? 'Rentang' : 'Pilih Tanggal');
                     initializeDatepicker();
                 });
 
