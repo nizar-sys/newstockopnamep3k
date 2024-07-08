@@ -43,12 +43,6 @@
 
                     <div class="row">
                         <div class="col-8">
-                            <div class="icheck-primary">
-                                <input class="custom-control-input" name="remember" id="remember" type="checkbox">
-                                <label for="remember">
-                                    Remember Me
-                                </label>
-                            </div>
                         </div>
                         <!-- /.col -->
                         <div class="col-4">
