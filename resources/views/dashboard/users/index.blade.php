@@ -30,9 +30,9 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Name</th>
+                                            <th>Nama</th>
                                             <th>Email</th>
-                                            <th>Role</th>
+                                            <th>Peran</th>
                                             <th>Avatar</th>
                                             <th>Aksi</th>
                                         </tr>

@@ -29,7 +29,7 @@
     <a class="nav-link {{ Route::is('checklist-records.*') ? 'active' : '' }}" href="{{ route('checklist-records.index') }}">
         <i class="nav-icon fas fa-check"></i>
         <p>
-            Checklist Records
+            Pengecekan P3K
         </p>
     </a>
 </li>
@@ -39,7 +39,7 @@
         <a class="nav-link {{ Route::is('approval-records.*') ? 'active' : '' }}" href="{{ route('approval-records.index') }}">
             <i class="nav-icon fas fa-clipboard-check"></i>
             <p>
-                Approval Records
+                Persetujuan Pengecekan
             </p>
         </a>
     </li>

@@ -1,9 +1,9 @@
 @extends('layouts.app')
-@section('title', 'Checklist Records')
+@section('title', 'Pengecekan P3K')
 
-@push('title-header', 'Checklist Records')
+@push('title-header', 'Pengecekan P3K')
 @push('breadcrumbs')
-    <li class="breadcrumb-item active">Checklist Records</li>
+    <li class="breadcrumb-item active">Pengecekan P3K</li>
 @endpush
 
 @push('style')

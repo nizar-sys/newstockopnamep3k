@@ -4,7 +4,8 @@
 @section('content')
     <div class="login-box">
         <div class="login-logo">
-            <a href="{{ route('register', []) }}"><b>{{ config('app.name') }}</b></a>
+            <small>Sistem Informasi Pengecekan Kotak P3K</small> <br>
+            <img src="{{ asset('/uploads/images/logo-auth.png') }}" alt="AdminLTE Logo" class="img-fluid w-25">
         </div>
         <!-- /.login-logo -->
         <div class="card">

@@ -23,7 +23,7 @@
                             <i class="fas fa-users"></i>
                         </div>
                         <a href="{{ route('users.index', []) }}" class="small-box-footer">
-                            More info <i class="fas fa-arrow-circle-right"></i>
+                            Lihat Selengkapnya <i class="fas fa-arrow-circle-right"></i>
                         </a>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                             <i class="fas fa-building"></i>
                         </div>
                         <a href="{{ route('rooms.index', []) }}" class="small-box-footer">
-                            More info <i class="fas fa-arrow-circle-right"></i>
+                            Lihat Selengkapnya <i class="fas fa-arrow-circle-right"></i>
                         </a>
                     </div>
                 </div>
@@ -49,13 +49,13 @@
                     <div class="small-box bg-warning">
                         <div class="inner">
                             <h3>{{ $data['count_approval'] }}</h3>
-                            <p>Total Pending Approval</p>
+                            <p>Total Persetujuan Pengecekan </p>
                         </div>
                         <div class="icon">
                             <i class="fas fa-clipboard-check"></i>
                         </div>
                         <a href="{{ route('checklist-records.index', []) }}" class="small-box-footer">
-                            More info <i class="fas fa-arrow-circle-right"></i>
+                            Lihat Selengkapnya <i class="fas fa-arrow-circle-right"></i>
                         </a>
                     </div>
                 </div>

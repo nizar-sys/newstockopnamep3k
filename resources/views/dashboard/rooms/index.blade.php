@@ -28,7 +28,7 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Nama Ruangan</th>
-                                            <th>QR Code</th>
+                                            <th>Kode QR</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>

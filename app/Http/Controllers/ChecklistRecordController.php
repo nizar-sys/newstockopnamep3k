@@ -146,7 +146,7 @@ class ChecklistRecordController extends Controller
             $checklistRecords = ChecklistRecord::insert($payloadChecklistRecords);
         }
 
-        activity('checklist_records')
+        activity('pengecekan_p3k')
             ->causedBy(auth()->user())
             ->performedOn($room)
             ->withProperties([
@@ -191,7 +191,7 @@ class ChecklistRecordController extends Controller
             ]);
         }
 
-        activity('checklist_records')
+        activity('pengecekan_p3k')
             ->causedBy(auth()->user())
             ->performedOn($item)
             ->withProperties([
@@ -217,7 +217,7 @@ class ChecklistRecordController extends Controller
 
         $room->load('items');
 
-        activity('checklist_records')
+        activity('pengecekan_p3k')
             ->causedBy(auth()->user())
             ->performedOn($item)
             ->withProperties([
@@ -240,7 +240,7 @@ class ChecklistRecordController extends Controller
 
         $room->load('items');
 
-        activity('checklist_records')
+        activity('pengecekan_p3k')
             ->causedBy(auth()->user())
             ->performedOn($item)
             ->withProperties([
@@ -325,7 +325,7 @@ class ChecklistRecordController extends Controller
 
         $room->load('items');
 
-        activity('checklist_records')
+        activity('pengecekan_p3k')
             ->causedBy(auth()->user())
             ->performedOn($room)
             ->withProperties([

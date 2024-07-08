@@ -18,6 +18,12 @@
     @stack('style')
     <link rel="stylesheet" href="{{ asset('/assets/css//snackbar.min.css') }}">
     <script src="{{ asset('/assets/js/snackbar.min.js') }}"></script>
+    <style>
+        .login-page {
+            background: url('{{ asset('/uploads/images/bg-auth.jpeg') }}') no-repeat center center fixed;
+            background-size: cover;
+        }
+    </style>
 </head>
 
 <body class="hold-transition login-page">

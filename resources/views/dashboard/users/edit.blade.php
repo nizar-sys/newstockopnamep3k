@@ -48,7 +48,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="form-group mb-3">
-                                            <label for="role">Role</label>
+                                            <label for="role">Peran</label>
                                             <select class="form-control @error('role') is-invalid @enderror" id="role"
                                                 name="role">
                                                 @php
@@ -57,7 +57,7 @@
                                                         $roles = ['petugas'];
                                                     }
                                                 @endphp
-                                                <option value="" selected>---Role---</option>
+                                                <option value="" selected>Pilih Peran</option>
                                                 @foreach ($roles as $role)
                                                     <option value="{{ $role }}"
                                                         @if ($user->role == $role) selected @endif>
@@ -76,7 +76,7 @@
                                     <label for="avatar">Avatar</label>
                                     <input type="file" class="form-control @error('avatar') is-invalid @enderror"
                                         id="avatar" placeholder="Avatar Pengguna" name="avatar">
-                                    <div class="d-block invalid-feedback">Jangan upload gambar jika tidak diperlukan.</div>
+                                    <div class="d-block invalid-feedback">Jangan unggah gambar jika tidak diperlukan.</div>
                                 </div>
 
                                 <div class="row">

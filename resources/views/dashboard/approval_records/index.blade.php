@@ -1,9 +1,9 @@
 @extends('layouts.app')
-@section('title', 'Approval Records')
+@section('title', 'Persetujuan Pengecekan')
 
-@push('title-header', 'Approval Records')
+@push('title-header', 'Persetujuan Pengecekan')
 @push('breadcrumbs')
-    <li class="breadcrumb-item active">Approval Records</li>
+    <li class="breadcrumb-item active">Persetujuan Pengecekan</li>
 @endpush
 
 @section('content')

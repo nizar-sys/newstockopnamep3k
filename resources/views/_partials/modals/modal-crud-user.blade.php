@@ -52,7 +52,7 @@
                                             {{ $role }}</option>
                                     @endforeach
                                 </select>
-    
+
                                 @error('role')
                                     <div class="d-block invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -63,9 +63,9 @@
                     <div class="row" id="groupFormPassword">
                         <div class="col-6">
                             <div class="form-group mb-3">
-                                <label for="password">Katasandi</label>
+                                <label for="password">Kata Sandi</label>
                                 <input type="password" class="form-control @error('password') is-invalid @enderror" id="password"
-                                    placeholder="Katasandi pengguna" name="password">
+                                    placeholder="Kata Sandi pengguna" name="password">
 
                                 @error('password')
                                     <div class="d-block invalid-feedback">{{ $message }}</div>
@@ -74,9 +74,9 @@
                         </div>
                         <div class="col-6">
                             <div class="form-group mb-3">
-                                <label for="confirmation_password">Konfirmasi katasandi</label>
+                                <label for="confirmation_password">Konfirmasi Kata Sandi</label>
                                 <input type="password" class="form-control @error('confirmation_password') is-invalid @enderror"
-                                    id="confirmation_password" placeholder="Konfirmasi katasandi pengguna"
+                                    id="confirmation_password" placeholder="Konfirmasi Kata Sandi pengguna"
                                     name="confirmation_password">
 
                                 @error('confirmation_password')

@@ -4,7 +4,8 @@
 @section('content')
     <div class="login-box">
         <div class="login-logo">
-            <a href="{{ route('register', []) }}"><b>{{ config('app.name') }}</b></a>
+            <small>Sistem Informasi Pengecekan Kotak P3K</small> <br>
+            <img src="{{ asset('/uploads/images/logo-auth.png') }}" alt="AdminLTE Logo" class="img-fluid w-25">
         </div>
         <!-- /.login-logo -->
         <div class="card">
@@ -29,7 +30,7 @@
                     </div>
 
                     <div class="input-group mb-3">
-                        <input class="form-control" name="password" placeholder="Katasandi" type="password"
+                        <input class="form-control" name="password" placeholder="Kata Sandi" type="password"
                             value="{{ old('password') }}" id="password">
                         <div class="input-group-append">
                             <div class="input-group-text">
@@ -43,7 +44,7 @@
                     </div>
 
                     <div class="input-group mb-3">
-                        <input class="form-control" name="password_confirmation" placeholder="Konfirmasi Katasandi" type="password"
+                        <input class="form-control" name="password_confirmation" placeholder="Konfirmasi Kata Sandi" type="password"
                             value="{{ old('password_confirmation') }}" id="password_confirmation">
                         <div class="input-group-append">
                             <div class="input-group-text">
@@ -58,7 +59,7 @@
 
                     <div class="row">
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary btn-block">Reset Katasandi</button>
+                            <button type="submit" class="btn btn-primary btn-block">Reset Kata Sandi</button>
                         </div>
                         <!-- /.col -->
                     </div>

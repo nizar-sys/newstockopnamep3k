@@ -107,17 +107,17 @@
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="form-group mb-3">
-                                                <label for="password">Katasandi Baru</label>
+                                                <label for="password">Kata Sandi Baru</label>
                                                 <input type="password"
                                                     class="form-control @error('password') is-invalid @enderror"
-                                                    id="password" placeholder="Katasandi Akun" name="password">
+                                                    id="password" placeholder="Kata Sandi Akun" name="password">
 
                                                 @error('password')
                                                     <div class="d-block invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                                 <div class="d-block invalid-feedback">Jangan isi kolom jika tidak ingin
                                                     merubah
-                                                    katasandi akun.</div>
+                                                    Kata Sandi akun.</div>
                                             </div>
                                         </div>
                                     </div>

@@ -27,13 +27,56 @@
     <script src="{{ asset('/assets/js/snackbar.min.js') }}"></script>
 
     @stack('style')
+    <style>
+        .navbar-custom {
+            background: linear-gradient(to right, #15677b, #1d8ca1);
+            border-bottom: 4px solid #ffcc00;
+        }
+
+        .navbar-custom .navbar-brand,
+        .navbar-custom .navbar-nav .nav-link {
+            color: #ffffff;
+        }
+
+        .navbar-custom .navbar-brand:hover,
+        .navbar-custom .navbar-nav .nav-link:hover {
+            color: #ffcc00;
+        }
+
+        .sidebar-custom {
+            background: linear-gradient(to right, #15677b, #1d8ca1);
+            /* border-right: 4px solid #ffcc00; */
+            color: #ffffff;
+        }
+
+        .sidebar-custom a {
+            color: #ffffff;
+        }
+
+        .sidebar-custom a:hover {
+            color: #ffcc00;
+        }
+
+        .sidebar-custom .sidebar-header {
+            background-color: #ffcc00;
+            color: #000000;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .user-header-custom {
+            background: linear-gradient(to right, #15677b, #1d8ca1); /* Gradient from darker to lighter blue */
+            border-bottom: 2px solid #ffcc00; /* Yellow bottom border */
+            color: #ffffff; /* White text for better contrast */
+        }
+    </style>
 </head>
 
 <body class="hold-transition sidebar-mini">
     <!-- Site wrapper -->
     <div class="wrapper">
         <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <nav class="main-header navbar navbar-expand navbar-custom navbar-light">
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -44,6 +87,10 @@
 
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <img src="{{ asset('/uploads/images/logo-pln.png') }}" width="90"
+                        alt="{{ config('app.name') }}" />
+                </li>
                 <li class="nav-item dropdown user-menu">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                         <img src="{{ asset('/uploads/images/' . $authUser->avatar) }}"
@@ -52,7 +99,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                         <!-- User image -->
-                        <li class="user-header bg-dark">
+                        <li class="user-header bg-dark user-header-custom">
                             <img src="{{ asset('/uploads/images/' . $authUser->avatar) }}"
                                 class="img-circle elevation-2" alt="User Image">
 
@@ -76,12 +123,12 @@
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <aside class="main-sidebar sidebar-dark-primary elevation-4 sidebar-custom">
             <!-- Brand Logo -->
             <a href="{{ route('home', []) }}" class="brand-link">
-                <img src="{{ asset('newassets') }}/dist/img/AdminLTELogo.png" alt="AdminLTE Logo"
-                    class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">{{ config('app.name') }}</span>
+                <img src="{{ asset('/uploads/images/logo-pln.png') }}" alt="{{ config('app.name') }}"
+                    class="brand-image" style="opacity: .8">
+                <span class="brand-text font-weight-light">{{ config('app.short_name') }}</span>
             </a>
 
             <!-- Sidebar -->
@@ -128,8 +175,8 @@
             <div class="float-right d-none d-sm-block">
                 <b>Version</b> 1.0
             </div>
-            <strong>Copyright &copy; {{ date('Y') }} <a
-                    href="{{ url('/', []) }}">{{ config('app.name') }}</a>.</strong> All rights
+            <strong>Copyright &copy; {{ date('Y') }} <a href="{{ url('/', []) }}">PT. PLN</a>.</strong> All
+            rights
             reserved.
         </footer>
 

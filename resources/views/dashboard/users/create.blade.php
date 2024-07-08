@@ -46,7 +46,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="form-group mb-3">
-                                            <label for="role">Role</label>
+                                            <label for="role">Peran</label>
                                             <select class="form-control @error('role') is-invalid @enderror" id="role" name="role">
                                                 @php
                                                     $roles = ['admin', 'atasan', 'petugas'];
@@ -54,7 +54,7 @@
                                                         $roles = ['petugas'];
                                                     }
                                                 @endphp
-                                                <option value="" selected>---Role---</option>
+                                                <option value="" selected>Pilih Peran</option>
                                                 @foreach ($roles as $role)
                                                     <option value="{{ $role }}" @if (old('role') == $role) selected @endif>
                                                         {{ ucfirst($role) }}</option>
@@ -71,9 +71,9 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="form-group mb-3">
-                                            <label for="password">Katasandi</label>
+                                            <label for="password">Kata Sandi</label>
                                             <input type="password" class="form-control @error('password') is-invalid @enderror" id="password"
-                                                placeholder="Katasandi Pengguna" name="password">
+                                                placeholder="Kata Sandi Pengguna" name="password">
 
                                             @error('password')
                                                 <div class="d-block invalid-feedback">{{ $message }}</div>
@@ -82,9 +82,9 @@
                                     </div>
                                     <div class="col-6">
                                         <div class="form-group mb-3">
-                                            <label for="confirmation_password">Konfirmasi katasandi</label>
+                                            <label for="confirmation_password">Konfirmasi Kata Sandi</label>
                                             <input type="password" class="form-control @error('confirmation_password') is-invalid @enderror"
-                                                id="confirmation_password" placeholder="Konfirmasi katasandi Pengguna"
+                                                id="confirmation_password" placeholder="Konfirmasi Kata Sandi Pengguna"
                                                 name="confirmation_password">
 
                                             @error('confirmation_password')

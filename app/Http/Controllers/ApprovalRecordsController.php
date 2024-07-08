@@ -30,7 +30,7 @@ class ApprovalRecordsController extends Controller
         // Reload the updated records
         $newChecklistRecords = ChecklistRecord::whereIn('id', $checklistRecordIds)->get()->toArray();
 
-        activity('approval_records')
+        activity('persetujuan_pengecekan')
             ->withProperties([
                 'old' => $oldChecklistRecords,
                 'new' => $newChecklistRecords,
